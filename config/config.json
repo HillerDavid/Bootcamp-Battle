@@ -2,14 +2,14 @@
   "development": {
     "username": "root",
     "password": "Hambone7&",
-    "database": "exampledb",
+    "database": "bootcamp_battle_db",
     "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
     "password": null,
-    "database": "testdb",
+    "database": "bootcamp_battle_db",
     "host": "localhost",
     "dialect": "mysql",
     "logging": false
