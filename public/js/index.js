@@ -3,6 +3,7 @@ var $exampleText = $("#example-text");
 var $exampleDescription = $("#example-description");
 var $submitBtn = $("#submit");
 var $exampleList = $("#example-list");
+let socket = io.connect("localhost:3000");
 
 // The API object contains methods for each kind of request we'll make
 var API = {
