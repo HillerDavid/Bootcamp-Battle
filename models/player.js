@@ -34,7 +34,7 @@ module.exports = function(sequelize, DataTypes) {
                 min: 0
             }
         },
-        hp: {
+        stress: {
             type: DataTypes.INTEGER,
             validate: {
                 notNull: true,
