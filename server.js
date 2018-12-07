@@ -22,8 +22,8 @@ app.engine(
 app.set('view engine', 'handlebars')
 
 // Routes
-require('./routes/apiRoutes')(app)
-require('./routes/htmlRoutes')(app)
+require('./controllers/routes/apiRoutes')(app)
+require('./controllers/routes/htmlRoutes')(app)
 
 let syncOptions = { force: false }
 
