@@ -1,14 +1,15 @@
-module.exports = function Player(player_id, player_name, attack, defense, hp, mp, currency, homework_completed, exp, level){
-    this.player_id = player_id
-    this.player_name = player_name
+module.exports = function Player(playerID, playerName, attack, defense, hp, mp, currency, homeworkCompleted, exp, level){
+    this.playerID = playerID
+    this.playerName = playerName
     this.attack = attack
     this.defense = defense
     this.hp = hp
     this.mp = mp
     this.currency = currency
-    this.homework_completed = homework_completed
+    this.homeworkCompleted = homeworkCompleted
     this.exp = exp
     this.level = level
+    this.room = "home"
     
     this.isAlive = function(){
         return(this.hp < this.level * 10)
