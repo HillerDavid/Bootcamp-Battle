@@ -1,4 +1,4 @@
-function Player(player_id, player_name, attack, defense, hp, mp, currency, homework_completed, exp, level){
+module.exports = function Player(player_id, player_name, attack, defense, hp, mp, currency, homework_completed, exp, level){
     this.player_id = player_id;
     this.player_name = player_name;
     this.attack = attack;

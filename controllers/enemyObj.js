@@ -1,4 +1,4 @@
-function Enemy(enemyName, attack, defense, hp, expValue){
+module.exports = function Enemy(enemyName, attack, defense, hp, expValue){
     this.enemyName = enemyName;
     this.attack = attack;
     this.defense = defense;
