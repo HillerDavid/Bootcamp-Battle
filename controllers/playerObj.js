@@ -9,4 +9,13 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
     this.homework_completed = homework_completed
     this.exp = exp
     this.level = level
+    
+    this.isAlive = function(){
+        return(this.hp < this.level * 10)
+    }
+
+    this.attack = function(enemy){
+        enemy.hp -= this.attack
+        enemy.isAlive()
+    }
 }

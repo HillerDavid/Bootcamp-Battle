@@ -22,6 +22,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         attack: {
             type: DataTypes.INTEGER,
+            defaultValue: 1,
             validate: {
                 notNull: true,
                 min: 0
@@ -29,6 +30,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         defense: {
             type: DataTypes.INTEGER,
+            defaultValue: 1,
             validate: {
                 notNull: true,
                 min: 0
@@ -36,6 +38,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         hp: {
             type: DataTypes.INTEGER,
+            defaultValue: 0,
             validate: {
                 notNull: true,
                 min: 0
@@ -43,13 +46,15 @@ module.exports = function(sequelize, DataTypes) {
         },
         mp: {
             type: DataTypes.INTEGER,
-            Validate: {
+            defaultValue: 10,
+            validate: {
                 notNull: true,
                 min: 0
             }
         },
         currency: {
             type: DataTypes.INTEGER,
+            defaultValue: 0,
             validate: {
                 notNull: true,
                 min: 0
@@ -57,6 +62,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         homework_completed: {
             type: DataTypes.INTEGER,
+            defaultValue: 0,
             validate: {
                 notNull: true,
                 min: 0
@@ -64,6 +70,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         exp: {
             type: DataTypes.INTEGER,
+            defaultValue: 0,
             validate: {
                 notNull: true,
                 min: 0
@@ -71,6 +78,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         level: {
             type: DataTypes.INTEGER,
+            defaultValue: 1,
             validate: {
                 notNull: true,
                 min: 1
