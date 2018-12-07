@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-undef */
 require('dotenv').config()
 let express = require('express')
 let exphbs = require('express-handlebars')
@@ -44,7 +46,7 @@ db.sequelize.sync(syncOptions).then(function() {
             PORT,
             PORT
         )
-   })
+    })
 })
 
 module.exports = app
