@@ -1,4 +1,5 @@
 let Player = require('./playerObj')
+let Enemy = require('./enemyObj')
 
 let game = {
     players: {},
@@ -14,7 +15,16 @@ let game = {
             let temp = game.players[tempKey]
             delete game.players[tempKey]
             game.players[socketId] = temp
-            console.log(game.players)
+            game.players[socketId].reference = socketId
+        },
+        createEnemy: function(players) {
+            game.enemies[players[0].reference] = {}
+            game.enemies[players[0].reference] = new Enemy('assignment', 1, 1, 2, 100, players[0].reference, players)
+            for(let i = 0; i < players.length; i++) {
+                if (!game.players[players[i].reference].currentEnemy) {
+                    game.players[players[i].reference].currentEnemy = game.enemies[players[0].reference]
+                }
+            }
         }
     }
 }
