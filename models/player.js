@@ -23,64 +23,64 @@ module.exports = function(sequelize, DataTypes) {
         attack: {
             type: DataTypes.INTEGER,
             defaultValue: 1,
+            allowNull: false,
             validate: {
-                notNull: true,
                 min: 0
             }
         },
         defense: {
             type: DataTypes.INTEGER,
             defaultValue: 1,
+            allowNull: false,
             validate: {
-                notNull: true,
                 min: 0
             }
         },
         hp: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
+            allowNull: false,
             validate: {
-                notNull: true,
                 min: 0
             }
         },
         mp: {
             type: DataTypes.INTEGER,
             defaultValue: 10,
+            allowNull: false,
             validate: {
-                notNull: true,
                 min: 0
             }
         },
         currency: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
+            allowNull: false,
             validate: {
-                notNull: true,
                 min: 0
             }
         },
         homework_completed: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
+            allowNull: false,
             validate: {
-                notNull: true,
                 min: 0
             }
         },
         exp: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
+            allowNull: false,
             validate: {
-                notNull: true,
                 min: 0
             }
         },
         level: {
             type: DataTypes.INTEGER,
             defaultValue: 1,
+            allowNull: false,
             validate: {
-                notNull: true,
                 min: 1
             }
         }

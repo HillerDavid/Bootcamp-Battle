@@ -9,3 +9,13 @@ $('#login-btn').on('click', function() {
         window.location.replace(data)
     })
 })
+
+$('#register-btn').on('click', function() {
+    event.preventDefault()
+    let email = $('#input-email').val()
+    let password = $('#input-password').val()
+    let player_name = $('#input-user').val()
+    $.post('/api/createaccount', { email, player_name, password }).then(() => {
+        
+    })
+})
