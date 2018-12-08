@@ -1,57 +1,55 @@
-<div class="container-fluid" style="height: 100vh;">
-    <div class="row">
-        <div class="col-sm-1 bg-dark">
+<div class="container-fluid" style="height: 100vh; width: 100%;">
+    <div class="row" style="height: 100vh;">
+        <div class="col-sm-1 bg-dark" style="100vh;">
             <div class="py-2 sticky-top flex-grow-1">
                 <div class="row">
                     <div class="col-2">
-                        <div class="nav flex-sm-column ">
-                            <a href="" class="nav-link d-none d-sm-inline">Sidebar</a>
-                            <a href="" class="nav-link">Link</a>
-                            <a href="" class="nav-link">Link</a>
-                            <a href="" class="nav-link">Link</a>
-                            <a href="" class="nav-link">Link</a>
-                            <a href="" class="nav-link">Link</a>
+                        <div class="row center">
+                            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                                    aria-controls="home">Home</a>
+                                <a class="nav-link active" id="settings-tab" data-toggle="tab" href="#settings" role="tab"
+                                    aria-controls="settings">Settings</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-3 bg-light">
+        <div class="col-sm-3 bg-light" style="height: 100vh;">
             <div class="py-2 sticky-top flex-grow-1">
                 <div class="row">
                     <div class="col-2">
                         <div class="nav flex-sm-column ">
-
+                            {{!-- <div class="tab-content">
+                                <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
+                                <div class="tab-pane" id="settings" role="tabpanel" aria-labelledby="profile-tab">Settings</div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-8" id="main">
-            <div style="height: 60vh;">
-                <h1>Main Area</h1>
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet similique soluta labore vero saepe
-                expedita? Laborum recusandae consequatur, voluptatum, architecto quibusdam pariatur quidem doloremque
-                numquam, fugiat laudantium sunt iure reprehenderit?
-            </p>
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet similique soluta labore vero saepe
-                expedita? Laborum recusandae consequatur, voluptatum, architecto quibusdam pariatur quidem doloremque
-                numquam, fugiat laudantium sunt iure reprehenderit?
-            </p>
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet similique soluta labore vero saepe
-                expedita? Laborum recusandae consequatur, voluptatum, architecto quibusdam pariatur quidem doloremque
-                numquam, fugiat laudantium sunt iure reprehenderit?
-            </p>
+        <div class="col-8" id="main" style="height: 100vh;">
+            <div class="row" style="background-color: red; height: 60vh;">
+                <div class="col-12">
+                    <div>
+                        <h1>Main Area</h1>
 
+                    </div>
+                </div>
             </div>
-            <div class="terminal" style="background-color: black; height: 40vh;">
-                <p>This is a terminal</p>
+            <div class="row" style="background-color: black; height: 35vh;">
+                <div class="col-12">
+                    <div id="terminal-prompts">
+                        <p style="color: lime;">> Starting Terminal...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="background-color: lightgrey; height: 5vh;">
+                <button class="btn btn-success" id="terminal-button" style="width: 5%;">$</button><input type="text" id="terminal-cmd"
+                    style="width: 95%;">
             </div>
         </div>
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-<script src="/js/game.js"></script>
