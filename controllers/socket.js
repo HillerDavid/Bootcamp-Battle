@@ -1,4 +1,4 @@
-module.exports = function(io, game) {
+module.exports = function(io, cb) {
     io.on('connection', newConnection)
 
     function newConnection(socket) {
@@ -6,7 +6,7 @@ module.exports = function(io, game) {
         socket.on('identifier', identifyPlayer)
 
         function identifyPlayer(data) {
-            game.methods.associatePlayer(data, socket.id)
+            cb(data, socket.id)
         }
     }
 }
