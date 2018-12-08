@@ -1,7 +1,8 @@
 let Player = require('./playerObj')
 
-let list = {
+let game = {
     players: {},
+    enemies: {},
     methods: {
         addPlayer: function(tempKey, data) {
             list.players[tempKey] = {}
@@ -18,4 +19,4 @@ let list = {
     }
 }
 
-module.exports = list
+module.exports = game
