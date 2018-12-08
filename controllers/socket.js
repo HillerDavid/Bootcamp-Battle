@@ -22,10 +22,11 @@ module.exports = function(io, game) {
                 if (command === 'attack') {
                     if (game.players[socket.id].currentEnemy) {
                         if (!game.players[socket.id].currentEnemy.isAlive()) {
-                            for(let i = 0; i < game.players[socket.id].currentEnemy.players.length; i++) {
-                                game.players[socket.id].currentEnemy.players[i].currentEnemy = false
-                            }
+                            let playerList = game.players[socket.id].currentEnemy.players
                             delete game.enemies[game.players[socket.id].currentEnemy.reference]
+                            for(let i = 0; i < playerList.length; i++) {
+                                playerList[i].currentEnemy = false
+                            }
                         }
                     }
                 } 
