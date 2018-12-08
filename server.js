@@ -32,7 +32,7 @@ let game = require('./controllers/gameObj')
 // Routes
 require('./controllers/routes/apiRoutes')(app, game.methods.addPlayer)
 require('./controllers/routes/htmlRoutes')(app)
-require('./controllers/socket')(io, game.methods.associatePlayer)
+require('./controllers/socket')(io, game)
 
 let syncOptions = { force: false }
 
