@@ -14,7 +14,12 @@ module.exports = function(io, game) {
             let string = data.toLowerCase()
             let command = data.split(' ')[0]
             let modifier = data.split(' ').slice(1).join(' ')
-            game.players[socket.id].move(modifier)
+            if (game.players[socket.id][command]) {
+                game.players[socket.id][command](modifier)
+                if (command === 'move' && modifier === 'class') {
+                    game.methods.createEnemy([socket.id])
+                }
+            }
         }
     }
 }
