@@ -1,6 +1,6 @@
 <div class="container-fluid" style="height: 100vh;">
-    <div class="row">
-        <div class="col-sm-1 bg-dark">
+    <div class="row" style="height: 100vh;">
+        <div class="col-sm-1 bg-dark" style="100vh;">
             <div class="py-2 sticky-top flex-grow-1">
                 <div class="row">
                     <div class="col-2">
@@ -16,7 +16,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-3 bg-light">
+        <div class="col-sm-3 bg-light" style="height: 100vh;">
             <div class="py-2 sticky-top flex-grow-1">
                 <div class="row">
                     <div class="col-2">
@@ -27,31 +27,26 @@
                 </div>
             </div>
         </div>
-        <div class="col-8" id="main">
-            <div style="height: 60vh;">
-                <h1>Main Area</h1>
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet similique soluta labore vero saepe
-                expedita? Laborum recusandae consequatur, voluptatum, architecto quibusdam pariatur quidem doloremque
-                numquam, fugiat laudantium sunt iure reprehenderit?
-            </p>
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet similique soluta labore vero saepe
-                expedita? Laborum recusandae consequatur, voluptatum, architecto quibusdam pariatur quidem doloremque
-                numquam, fugiat laudantium sunt iure reprehenderit?
-            </p>
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet similique soluta labore vero saepe
-                expedita? Laborum recusandae consequatur, voluptatum, architecto quibusdam pariatur quidem doloremque
-                numquam, fugiat laudantium sunt iure reprehenderit?
-            </p>
+        <div class="col-8" id="main" style="height: 100vh;">
+            <div class="row" style="background-color: red; height: 60vh;">
+                <div class="col-12">
+                    <div>
+                        <h1>Main Area</h1>
 
+                    </div>
+                </div>
             </div>
-            <div class="terminal" style="background-color: black; height: 40vh;">
-                <p>This is a terminal</p>
+            <div class="row" style="background-color: black; height: 35vh;">
+                <div class="col-12">
+                    <div id="terminal-prompts">
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="background-color: lightgrey; height: 5vh;">
+                <input type="email" class="form-control" id="my_form" aria-describedby="emailHelp" placeholder="Enter email">
             </div>
         </div>
     </div>
 </div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-<script src="/js/game.js"></script>

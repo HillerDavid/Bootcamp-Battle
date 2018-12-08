@@ -1,0 +1,19 @@
+html,
+body {
+  max-width: 100%;
+  overflow-y: hidden;
+}
+
+pre {
+  color: lime;
+  padding: 2px;
+  box-sizing: border-box;
+}
+
+
+input[type="text"],
+textarea {
+  outline: none;
+  box-shadow: none !important;
+  border: 1px solid #ccc !important;
+}

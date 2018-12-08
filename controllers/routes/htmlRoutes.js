@@ -1,28 +1,26 @@
 var db = require('../../models')
 
-module.exports = function(app) {
-    // Load index page
-    app.get('/', function(req, res) {
-        db.Example.findAll({}).then(function(dbExamples) {
-            res.render('index', {
-                msg: 'Welcome!',
-                examples: dbExamples
-            })
+module.exports = function (app) {
+    // Load index page and pass in the index header
+    app.get('/', function (req, res) {
+        db.Example.findAll({}).then(function () {
+            res.render('index', {whichPartial: function(){
+                return 'indexHead'
+            }})
         })
     })
 
-    // Load example page and pass in an example by id
-    app.get('/game', function(req, res) {
-        db.Example.findAll({}).then(function(dbExamples) {
-            res.render('game', {
-                msg: 'Welcome!',
-                examples: dbExamples
-            })
+    // Load game page and pass in the game header
+    app.get('/game', function (req, res) {
+        db.Example.findAll({}).then(function () {
+            res.render('game', {whichPartial: function(){
+                return 'gameHead'
+            }})
         })
     })
 
     // Render 404 page for any unmatched routes
-    app.get('*', function(req, res) {
-        
+    app.get('*', function (req, res) {
+
     })
 }
