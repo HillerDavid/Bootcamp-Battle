@@ -1,16 +1,16 @@
-<div class="container-fluid" style="height: 100vh;">
+<div class="container-fluid" style="height: 100vh; width: 100%;">
     <div class="row" style="height: 100vh;">
         <div class="col-sm-1 bg-dark" style="100vh;">
             <div class="py-2 sticky-top flex-grow-1">
                 <div class="row">
                     <div class="col-2">
-                        <div class="nav flex-sm-column ">
-                            <a href="" class="nav-link d-none d-sm-inline">Sidebar</a>
-                            <a href="" class="nav-link">Link</a>
-                            <a href="" class="nav-link">Link</a>
-                            <a href="" class="nav-link">Link</a>
-                            <a href="" class="nav-link">Link</a>
-                            <a href="" class="nav-link">Link</a>
+                        <div class="row centere">
+                            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                                    aria-controls="home">Home</a>
+                                <a class="nav-link active" id="settings-tab" data-toggle="tab" href="#settings" role="tab"
+                                    aria-controls="settings">Settings</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -21,7 +21,10 @@
                 <div class="row">
                     <div class="col-2">
                         <div class="nav flex-sm-column ">
-
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
+                                <div class="tab-pane" id="settings" role="tabpanel" aria-labelledby="profile-tab">Settings</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -39,14 +42,18 @@
             <div class="row" style="background-color: black; height: 35vh;">
                 <div class="col-12">
                     <div id="terminal-prompts">
+                        <p style="color: lime;">> Starting Terminal...</p>
                     </div>
                 </div>
             </div>
             <div class="row" style="background-color: lightgrey; height: 5vh;">
-                <input type="email" class="form-control" id="my_form" aria-describedby="emailHelp" placeholder="Enter email">
+                <button class="btn btn-success" id="terminal-button" style="width: 5%;">$</button><input type="text" id="terminal-cmd"
+                    style="width: 95%;">
             </div>
         </div>
     </div>
 </div>
 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+<script src="/public/js/game.js"></script>
