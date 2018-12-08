@@ -27,10 +27,12 @@ app.engine(
 
 app.set('view engine', 'handlebars')
 
+let game = require('./controllers/gameObj')
+
 // Routes
-require('./controllers/routes/apiRoutes')(app)
+require('./controllers/routes/apiRoutes')(app, game)
 require('./controllers/routes/htmlRoutes')(app)
-require('./controllers/socket')(io)
+require('./controllers/socket')(io, game)
 
 let syncOptions = { force: false }
 

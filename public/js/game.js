@@ -1,4 +1,5 @@
 let socket = io.connect();
+socket.emit('identifier', localStorage.number)
 
 $('#terminal-button').on('click', function(event){
     event.preventDefault()
