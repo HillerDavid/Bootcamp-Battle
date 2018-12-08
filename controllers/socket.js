@@ -12,13 +12,23 @@ module.exports = function(io, game) {
 
         function parseCommand(data) {
             let string = data.toLowerCase()
-            let command = data.split(' ')[0]
-            let modifier = data.split(' ').slice(1).join(' ')
-            if (game.players[socket.id][command]) {
-                game.players[socket.id][command](modifier)
+            let command = string.split(' ')[0]
+            let modifier = string.split(' ').slice(1).join(' ')
+            if (game.players[socket.id][`${command}Command`]) {
+                game.players[socket.id][`${command}Command`](modifier)
                 if (command === 'move' && modifier === 'class') {
-                    game.methods.createEnemy([socket.id])
+                    game.methods.createEnemy([game.players[socket.id]])
                 }
+                if (command === 'attack') {
+                    if (game.players[socket.id].currentEnemy) {
+                        if (!game.players[socket.id].currentEnemy.isAlive()) {
+                            for(let i = 0; i < game.players[socket.id].currentEnemy.players.length; i++) {
+                                game.players[socket.id].currentEnemy.players[i].currentEnemy = false
+                            }
+                            delete game.enemies[game.players[socket.id].currentEnemy.reference]
+                        }
+                    }
+                } 
             }
         }
     }

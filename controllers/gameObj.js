@@ -15,15 +15,16 @@ let game = {
             let temp = game.players[tempKey]
             delete game.players[tempKey]
             game.players[socketId] = temp
-            console.log(game.players)
+            game.players[socketId].reference = socketId
         },
-        createEnemy: function(playerList) {
-            game.enemies[playerList[0]] = {}
-            let players = []
-            for(let i = 0; i < playerList.length; i++) {
-                players.push(game.players[playerList[0]])
+        createEnemy: function(players) {
+            game.enemies[players[0].reference] = {}
+            game.enemies[players[0].reference] = new Enemy('assignment', 1, 1, 2, 100, players[0].reference, players)
+            for(let i = 0; i < players.length; i++) {
+                if (!game.players[players[i].reference].currentEnemy) {
+                    game.players[players[i].reference].currentEnemy = game.enemies[players[0].reference]
+                }
             }
-            game.enemies[playerList[0]] = new Enemy('assignment', 1, 1, 100, 100, players)
         }
     }
 }
