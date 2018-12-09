@@ -1,4 +1,4 @@
-$('#login-btn').on('click', function() {
+$('#login-button').on('click', function() {
     event.preventDefault()
     let email = $('#input-email').val()
     let password = $('#input-password').val()
@@ -10,7 +10,7 @@ $('#login-btn').on('click', function() {
     })
 })
 
-$('#register-btn').on('click', function() {
+$('#register-button').on('click', function() {
     event.preventDefault()
     let email = $('#input-email').val()
     let password = $('#input-password').val()
