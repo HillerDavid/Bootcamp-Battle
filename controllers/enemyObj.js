@@ -9,7 +9,7 @@ module.exports = function Enemy(enemyName, attack, defense, hp, expValue, refere
 
     this.attackCommand = function(){
         players[0].hp += this.attack
-        console.log(players[0].hp)
+        console.log(`${players[0].player_name}'s hp: ${players[0].hp}`)
         for(let player of players) {
             player.attacked = false
         }

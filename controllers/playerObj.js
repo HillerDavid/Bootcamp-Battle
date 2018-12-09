@@ -19,7 +19,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         if (this.canAttack()) {
             this.currentEnemy.hp -= this.attack
             this.attacked = true
-            console.log(this.currentEnemy.hp)
+            console.log(`${this.currentEnemy.enemyName}'s hp: ${this.currentEnemy.hp}`)
             return this.currentEnemy.isAlive()  
         }
         return true
