@@ -1,5 +1,6 @@
 let Player = require('./playerObj')
 let Enemy = require('./enemyObj')
+let db = require('../models')
 
 let game = {
     //This is the list of players in object form for easier manipulation
@@ -45,6 +46,36 @@ let game = {
                     //Set the player's currentEnemy to this one
                     player.currentEnemy = game.enemies[players[0].reference]
                 }
+            }
+        },
+
+        removePlayer: function(key) {
+            if (game.players[key]) {
+                this.saveState(() => {
+                    delete game.players[key]
+                    console.log('Player removed')
+                },[key])
+                
+            }
+        },
+
+        saveState: function(cb, playerKeys = Object.keys(game.players)) {
+            for(let i = 0; i < playerKeys.length; i++) {
+                let player = game.players[playerKeys[i]]
+                db.Player.update({
+                    attack: player.attack,
+                    defense: player.defense,
+                    hp: player.hp,
+                    mp: player.mp,
+                    currency: player.currency,
+                    homework_completed: player.homework_completed,
+                    exp: player.exp,
+                    level: player.level
+                }, {
+                    where: {
+                        id: player.player_id
+                    }
+                }).then(cb)
             }
         }
     }

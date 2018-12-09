@@ -11,6 +11,8 @@ module.exports = function(io, game) {
         //Set up an event for when a player sends a command
         socket.on('command', parseCommand)
 
+        socket.on('disconnect', removePlayer)
+
         //When a player identifies themselves you connect the player obj to the socket connection
         function identifyPlayer(data) {
             game.methods.associatePlayer(data, socket.id)
@@ -67,7 +69,16 @@ module.exports = function(io, game) {
             //If the command is console console.log that players info
             if (command === 'console') {
                 console.log(game.players[socket.id].print())
+                return
             }
+            if (command === 'save') {
+                game.methods.saveState()
+                return
+            }
+        }
+
+        function removePlayer() {
+            game.methods.removePlayer(socket.id)
         }
 
         //When the alarm goes off the enemy attacks
