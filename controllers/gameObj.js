@@ -2,8 +2,13 @@ let Player = require('./playerObj')
 let Enemy = require('./enemyObj')
 
 let game = {
+    //This is the list of players in object form for easier manipulation
     players: {},
+
+    //This is the list of enemies in object form for easier manipulation
     enemies: {},
+    
+    //This is the list of game methods in object form for easy of use
     methods: {
         addPlayer: function(tempKey, data) {
             game.players[tempKey] = {}
