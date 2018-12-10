@@ -11,11 +11,15 @@ module.exports = function(io, game) {
         //Set up an event for when a player sends a command
         socket.on('command', parseCommand)
 
+        //Set up an event for when a player disconnects
         socket.on('disconnect', removePlayer)
 
         //When a player identifies themselves you connect the player obj to the socket connection
         function identifyPlayer(data) {
-            game.methods.associatePlayer(data, socket.id)
+            if (game.players[data]) {
+                game.methods.associatePlayer(data, socket.id)
+                return
+            }
         }
 
         //When a player sends a command respond accordingly
@@ -71,12 +75,14 @@ module.exports = function(io, game) {
                 console.log(game.players[socket.id].print())
                 return
             }
+            //Save the whole game
             if (command === 'save') {
                 game.methods.saveState()
                 return
             }
         }
 
+        //Call the game obj method to remove a given player
         function removePlayer() {
             game.methods.removePlayer(socket.id)
         }

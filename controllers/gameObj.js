@@ -23,14 +23,16 @@ let game = {
 
         //When a player connects on socket associate that socket id with the player object already created
         associatePlayer: function(tempKey, socketId) {
-            //Store the object in a temporary variable
-            let temp = game.players[tempKey]
-            //Delete the reference to the player stored in the temporary spot
-            delete game.players[tempKey]
-            //Store the object at it's new location: the player's soccket connection id
-            game.players[socketId] = temp
-            //Set reference in the player object to the socket id in case it's needed
-            game.players[socketId].reference = socketId
+            if (game.players[tempKey]) {
+                //Store the object in a temporary variable
+                let temp = game.players[tempKey]
+                //Delete the reference to the player stored in the temporary spot
+                delete game.players[tempKey]
+                //Store the object at it's new location: the player's soccket connection id
+                game.players[socketId] = temp
+                //Set reference in the player object to the socket id in case it's needed
+                game.players[socketId].reference = socketId
+            }
         },
 
         //Create an enemy object in the game enemy object list and associate it with a player
@@ -49,8 +51,11 @@ let game = {
             }
         },
 
+        //Remove the player from the game obj
         removePlayer: function(key) {
+            //If a player with that key exists
             if (game.players[key]) {
+                //Call the save state function and make it delete the player
                 this.saveState(() => {
                     delete game.players[key]
                     console.log('Player removed')
@@ -59,9 +64,13 @@ let game = {
             }
         },
 
+        //Save the player or players
         saveState: function(cb, playerKeys = Object.keys(game.players)) {
+            //Loop through the players passed in, or all players
             for(let i = 0; i < playerKeys.length; i++) {
+                //Set a player variable equal to the current player for ease of access
                 let player = game.players[playerKeys[i]]
+                //Update the database with their info
                 db.Player.update({
                     attack: player.attack,
                     defense: player.defense,
@@ -75,6 +84,7 @@ let game = {
                     where: {
                         id: player.player_id
                     }
+                //Execute the callback when the save is done
                 }).then(cb)
             }
         }
