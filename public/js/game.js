@@ -1,11 +1,11 @@
 let socket = io.connect()
 socket.emit('identifier', localStorage.number)
 
-$('#terminal').terminal(function (cmd, term) {
+$('#terminal').terminal(function (cmd) {
     let userCommand = cmd
     socket.emit('command', userCommand)
-    socket.on('', (response) => {
-        term.echo(response)
+    socket.once('server-response', (response) => {
+        this.echo(response)
     })
 }, {
     greetings: 'Welcome to Bootcamp Battle',
