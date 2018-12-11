@@ -16,7 +16,7 @@ module.exports = function(app, cb) {
     })
 
     app.post('/api/login', function(req, res) {
-        db.Player.findOne({where:{email:req.body.email}}).then(function(data) {
+        db.Player.findOne({where:{email:req.body.email}, include: [db.Item]}).then(function(data) {
             if (data) {
                 cb(req.body.number, data)
                 return res.json('/game')
