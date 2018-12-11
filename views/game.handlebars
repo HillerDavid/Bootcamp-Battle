@@ -39,20 +39,18 @@
                     </div>
                 </div>
             </div>
-            <div class="row" style="background-color: black; height: 35vh;">
-                <div class="col-12">
-                    <div id="terminal-prompts">
-                        <p style="color: lime;">> Starting Terminal...</p>
-                    </div>
+            <div class="row" style="height: 40vh">
+                <div class="col-12" id="terminal">
+
                 </div>
-            </div>
-            <div class="row" style="background-color: lightgrey; height: 5vh;">
-                <button class="btn btn-success" id="terminal-button" style="width: 5%;">$</button><input type="text" id="terminal-cmd"
-                    style="width: 95%;">
             </div>
         </div>
     </div>
 </div>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdn.rawgit.com/jcubic/jquery.terminal/master/js/jquery.terminal.min.js"></script>
+<link href="https://cdn.rawgit.com/jcubic/jquery.terminal/master/css/jquery.terminal.min.css" rel="stylesheet" />
+<script src="https://cdn.rawgit.com/inexorabletash/polyfill/master/keyboard.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
 <script src="/js/game.js"></script>
