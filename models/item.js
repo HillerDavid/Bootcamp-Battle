@@ -27,6 +27,16 @@ module.exports = function(sequelize, DataTypes) {
             defaultValue: 0,
             allowNull: false,
         },
+        equippable: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false
+        },
+        usable: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
+            allowNull: false
+        },
         equipped: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,

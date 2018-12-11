@@ -9,6 +9,39 @@ let game = {
 
     //This is the list of enemies in object form for easier manipulation
     enemies: {},
+
+    items: {
+        'health potion': {
+            item_name: 'health potion',
+            cost: 10,
+            attack: 0,
+            defense: 0,
+            hp: 10,
+            mp: 0,
+            equippable: false,
+            usable: true
+        },
+        'sword': {
+            item_name: 'sword',
+            cost: 50,
+            attack: 5,
+            defense: 0,
+            hp: 0,
+            mp: 0,
+            equippable: true,
+            usable: false
+        },
+        'shield': {
+            item_name: 'shield',
+            cost: 50,
+            attack: 0,
+            defense: 5,
+            hp: 0,
+            mp: 0,
+            equippable: true,
+            usable: false
+        }
+    },
     
     //This is the list of game methods in object form for easy of use
     methods: {
@@ -21,6 +54,7 @@ let game = {
                 data.defense, data.hp, data.mp, data.currency, data.homework_completed,
                 data.exp, data.level)
 
+            //Loop through all of the items in the database belonging to the player and add them to the player's inventory
             for(let item of data.Items) {
                 game.methods.giveItem(game.players[tempKey], item.item_name, item.attack, item.defense, item.hp, item.mp, item.equipped)
             }
@@ -56,28 +90,52 @@ let game = {
             }
         },
 
-        giveItem: function(player, item_name, attack, defense, hp, mp, shouldSave) {
+        //Function that creates items, and adds them to players inventories
+        giveItem: function(player, item, quantity = 1, shouldSave) {
+            //Look through the players inventory
             for(let playerItem of player.inventory) {
-                if (playerItem.item_name === item_name) {
-                    playerItem.quantity++
+                //If the item being given is already in their inventory
+                if (playerItem.item_name === item.item_name) {
+                    //Add one for every item being given (done in a loop for database reasons)
+                    for(let i = 0; i < quantity; i++) {
+                        playerItem.quantity++
+                        if (shouldSave) {
+                            game.methods.saveItem(player, playerItem)
+                        }
+                    }
                     console.log(player.inventory)
                     return
                 }
             }
-            player.inventory.push(new Item(item_name, attack, defense, hp, mp, false))
+
+            //If the player didn't already have the item in their inventory add it
+            player.inventory.push(new Item(item.item_name, item.attack, item.defense,
+                item.hp, item.mp, item.equippable, item.usable, false))
+
+            //Save the item if it should be saved
             if (shouldSave) {
-                game.saveItem(player, item_name)
+                game.methods.saveItem(player, player.inventory[player.inventory.length - 1])
             }
-            // console.log(player.inventory)
+
+            //If the item didn't previously exist in their inventory the loop didn't add them, so call the method again to add the rest
+            game.methods.giveItem(player, item, quantity - 1, shouldSave)
         },
 
-        removeItem: function(player, item) {
-            db.Item.destroy({
+        //Removes a certain quantity of an item from the database
+        removeItem: function(player, item, quantity) {
+            //Create the object to determine the query
+            let destroyQuery = {
                 where: {
                     PlayerId: player.player_id,
                     item_name: item.item_name
                 }
-            }).then(() => {
+            }
+            //If quantity is provided only remove that many copies of the item
+            if (quantity) {
+                destroyQuery.limit = quantity
+            }
+            //Actually remove the items from the database
+            db.Item.destroy(destroyQuery).then(() => {
                 console.log('Item removed from the database')
             })
         },
@@ -95,6 +153,7 @@ let game = {
             }
         },
 
+        //Save an item to the database
         saveItem: function(player, item) {
             db.Item.create({
                 item_name: item.item_name,
@@ -102,6 +161,8 @@ let game = {
                 defense: item.defense,
                 hp: item.hp,
                 mp: item.mp,
+                equippable: item.equippable,
+                usable: item.usable,
                 equipped: item.equipped,
                 PlayerId: player.player_id
             }).then(() => {
