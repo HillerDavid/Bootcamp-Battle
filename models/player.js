@@ -85,5 +85,11 @@ module.exports = function(sequelize, DataTypes) {
             }
         }
     })
+
+    Player.associate = function(models) {
+        models.Player.hasMany(models.Item, {
+            onDelete: 'CASCADE'
+        })
+    }
     return Player
 }
