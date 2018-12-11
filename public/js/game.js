@@ -1,5 +1,15 @@
 let socket = io.connect();
 socket.emit('identifier', localStorage.number)
+socket.on('chat', incomingChat)
+
+function incomingChat(data) {
+    console.log(`User: ${data.user}`)
+    console.log(`Message: ${data.message}`)
+}
+
+function sendMessage(message) {
+    socket.emit('chat', message)
+}
 
 $('#terminal-button').on('click', function (event) {
     event.preventDefault()
@@ -12,6 +22,7 @@ $('#terminal-button').on('click', function (event) {
 $('#chat-button').on('click', function (event) {
     event.preventDefault()
     let message = $('#chat-message-area').val()
+    sendMessage(message)
     let chatDiv = $('<div>')
     chatDiv.addClass('outgoing-message-container lighter')
     let avatar = $('<img>')
