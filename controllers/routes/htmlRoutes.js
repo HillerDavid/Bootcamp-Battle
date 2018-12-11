@@ -1,4 +1,5 @@
-var db = require('../../models')
+let db = require('../../models')
+let isAuthenticated = require('../../config/middleware/isAuthenticated')
 
 module.exports = function (app) {
     // Load index page and pass in the index header
@@ -9,7 +10,7 @@ module.exports = function (app) {
     })
 
     // Load game page and pass in the game header
-    app.get('/game', function (req, res) {
+    app.get('/game', isAuthenticated, function (req, res) {
         res.render('game', {whichPartial: function(){
             return 'gameHead'
         }})

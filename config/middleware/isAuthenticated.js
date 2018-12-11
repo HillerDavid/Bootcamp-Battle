@@ -1,5 +1,5 @@
 module.exports = function(req, res, next) {
-    if (req.player) {
+    if (req.user) {
         return next()
     }
 
