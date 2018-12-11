@@ -1,21 +1,51 @@
 $('#login-button').on('click', function() {
     event.preventDefault()
-    let email = $('#input-email').val()
-    let password = $('#input-password').val()
+    let email = $('#input-email').val().trim()
+    let password = $('#input-password').val().trim()
     let number = Math.floor(Math.random() * 1000000)
-    $.post('/api/login', { email: email, password: password, number: number }).then((data) => {
-        console.log('Test')
-        localStorage.number = number
-        window.location.replace(data)
-    })
+    let userData = {
+        email,
+        password,
+        number
+    }
+    if (!userData.email || !userData.password) {
+        return
+    }
+    logInUser(userData)
+    $('#input-email').val('')
+    $('#input-password').val('')
+    $('#input-user').val('')
+    
 })
 
 $('#register-button').on('click', function() {
     event.preventDefault()
-    let email = $('#input-email').val()
-    let password = $('#input-password').val()
-    let player_name = $('#input-user').val()
-    $.post('/api/createaccount', { email, player_name, password }).then(() => {
+    let email = $('#input-email').val().trim()
+    let password = $('#input-password').val().trim()
+    let player_name = $('#input-user').val().trim()
+    let userData = {
+        email,
+        password,
+        player_name
+    }
+    if (!userData.email || !userData.password || !userData.player_name) {
+        return
+    }
+    signUpUser(userData)
+    $('#input-email').val('')
+    $('#input-password').val('')
+    $('#input-user').val('')
+})
+
+function signUpUser(userData) {
+    $.post('/api/createaccount', userData).then(() => {
         
     })
-})
+}
+
+function logInUser(userData) {
+    $.post('/api/login', userData).then((data) => {
+        localStorage.number = userData.number
+        window.location.replace(data)
+    })
+}
