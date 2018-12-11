@@ -11,7 +11,9 @@ textarea {
   border: 1px solid #ccc !important;
 }
 
-#terminal-prompts {
-  overflow-y: scroll;
-  color: lime;
+.terminal {
+  --color: rgba(0, 128, 0, 0.99);
+  --background: black;
+  --animation: terminal-underline;
+  border-bottom-color: #fff;
 }
