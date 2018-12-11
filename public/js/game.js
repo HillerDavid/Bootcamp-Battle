@@ -24,9 +24,6 @@ $('#chat-button').on('click', function (event) {
     messageText.text(message)
     chatDiv.append(avatar, messageText)
     $("#chat").append(chatDiv)
-        // .animate({
-        //     scrollTop: $('#chat').prop("scrollHeight")
-        // }, 500);
     $('#chat-message-area').val('')
     scrollChat()
 })
