@@ -65,7 +65,7 @@
                 </div>
                 <div class="col-8">
                     <div class="tab-content">
-                        <div class="tab-pane fade active" id="inventory" role="tabpanel" aria-labelledby="inventory-tab">
+                        <div class="tab-pane fade active show" id="inventory" role="tabpanel" aria-labelledby="inventory-tab">
                             <div class="container">
                                 <br>
                                 <br>
@@ -83,6 +83,62 @@
                                         <p>3</p>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <img src="https://via.placeholder.com/200" class="img-fluid">
+                                        <p>4</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <img src="https://via.placeholder.com/100" class="img-fluid">
+                                        <p>5</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <img src="https://via.placeholder.com/100" class="img-fluid">
+                                        <p>6</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <img src="https://via.placeholder.com/200" class="img-fluid">
+                                        <p>7</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <img src="https://via.placeholder.com/100" class="img-fluid">
+                                        <p>8</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <img src="https://via.placeholder.com/100" class="img-fluid">
+                                        <p>9</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <img src="https://via.placeholder.com/200" class="img-fluid">
+                                        <p>10</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <img src="https://via.placeholder.com/100" class="img-fluid">
+                                        <p>11</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <img src="https://via.placeholder.com/100" class="img-fluid">
+                                        <p>12</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <img src="https://via.placeholder.com/200" class="img-fluid">
+                                        <p>13</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <img src="https://via.placeholder.com/100" class="img-fluid">
+                                        <p>14</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <img src="https://via.placeholder.com/100" class="img-fluid">
+                                        <p>15</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="stats" role="tabpanel" aria-labelledby="stats-tab">...</div>
@@ -91,8 +147,7 @@
                                 <img src="/images/default-slack-1.png" alt="Avatar">
                                 <p>Hello. How are you today?</p>
                             </div>
-
-                            <div class="outgoing-message-container darker">
+                            {{!-- <div class="outgoing-message-container darker">
                                 <img src="/images/default-slack-2.png" alt="Avatar" class="right">
                                 <p>Hey! I'm fine. Thanks for asking!</p>
                             </div>
@@ -105,7 +160,16 @@
                             <div class="outgoing-message-container darker">
                                 <img src="/images/default-slack-2.png" alt="Avatar" class="right">
                                 <p>Nah, I dunno. Play soccer.. or learn more coding perhaps?</p>
+                            </div> --}}
+                            <div class="row">
+                                <div class="input-group mb-0 fixed-row-bottom">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-info" type="button" id="chat-button" style="border: 1px solid #303e4d;"><i class="far fa-paper-plane"></i></button>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Type your message here..." style="border: 1px solid #303e4d;" id="chat-message-area">
+                                </div>
                             </div>
+
                         </div>
                         <div class="tab-pane fade" id="help" role="tabpanel" aria-labelledby="help-tab">...</div>
                     </div>
