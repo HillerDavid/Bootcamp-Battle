@@ -56,7 +56,8 @@ let game = {
 
             //Loop through all of the items in the database belonging to the player and add them to the player's inventory
             for(let item of data.Items) {
-                game.methods.giveItem(game.players[tempKey], item.item_name, item.attack, item.defense, item.hp, item.mp, item.equipped)
+                // console.log(item.dataValues)
+                game.methods.giveItem(game.players[tempKey], item.dataValues)
             }
         },
 

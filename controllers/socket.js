@@ -51,7 +51,8 @@ module.exports = function(io, game) {
                     } else if (game.players[socket.id].currentEnemy.canAttack()){
                         console.log('Enemy is alive and will attack')
                         //Set a timer so it will attack after 2 seconds
-                        setTimeout(enemyAttack, 2000)
+                        enemyAttack()
+                        // setTimeout(enemyAttack, 2000)
                     } else {
                         //Some players have not attacked yet, so it is still their turn
                         console.log(`Enemy is alive but can't attack yet`)
@@ -67,8 +68,8 @@ module.exports = function(io, game) {
                 //Split the command into quantity and item
                 let quantity = modifier.split(' ')[0]
                 let item = modifier.split(' ').slice(1).join(' ')
-                //If item exists quantity is present
-                if (item) {
+                //If quantity is a number they are trying to by a specific number of an item
+                if (!isNaN(parseInt(quantity))) {
                     quantity = parseInt(quantity)
                     //If quantity is less than 0 quit
                     if (quantity < 0) {
