@@ -13,9 +13,19 @@ textarea {
   border: 1px solid #ccc !important;
 }
 
-#terminal-prompts {
-  overflow-y: scroll;
-  color: lime;
+.terminal {
+  --color: rgba(0, 128, 0, 0.99);
+  --background: black;
+  --animation: terminal-underline;
+  border-bottom-color: #fff;
+}
+
+.prompt, .cmd, .command {
+  --color: rgba(0,255,6, 0.99)
+}
+
+.terminal, .cmd, .terminal .terminal-output div div, .cmd .prompt {
+    --size: 1.5;
 }
 
 .slacker {
