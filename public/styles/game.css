@@ -20,9 +20,12 @@ textarea {
   border-bottom-color: #fff;
 }
 
-#terminal-prompts {
-  overflow-y: scroll;
-  color: lime;
+.prompt, .cmd, .command {
+  --color: rgba(0,255,6, 0.99)
+}
+
+.terminal, .cmd, .terminal .terminal-output div div, .cmd .prompt {
+    --size: 1.5;
 }
 
 .slacker {

@@ -2,6 +2,17 @@ let socket = io.connect()
 socket.emit('identifier', localStorage.number)
 socket.on('chat', incomingChat)
 
+$('#terminal').terminal(function (cmd) {
+    let userCommand = cmd
+    socket.emit('command', userCommand)
+    socket.once('command-response', (response) => {
+        this.echo(response)
+    })
+}, {
+    greetings: 'Basher loaded...\r\nWelcome to Bootcamp Battle',
+    prompt: '$ '
+})
+
 function incomingChat(data) {
     console.log(`User: ${data.user}`)
     console.log(`Message: ${data.message}`)
@@ -10,17 +21,6 @@ function incomingChat(data) {
 function sendMessage(message) {
     socket.emit('chat', message)
 }
-
-$('#terminal').terminal(function (cmd) {
-    let userCommand = cmd
-    socket.emit('command', userCommand)
-    socket.once('server-response', (response) => {
-        this.echo(response)
-    })
-}, {
-    greetings: 'Welcome to Bootcamp Battle',
-    prompt: '$ '
-})
 
 $('#chat-button').on('click', function (event) {
     event.preventDefault()
@@ -37,7 +37,7 @@ $('#chat-button').on('click', function (event) {
     let messageText = $('<p>')
     messageText.text(message)
     chatDiv.append(avatar, messageText)
-    $("#chat").append(chatDiv)
+    $('#chat').append(chatDiv)
     // .animate({
     //     scrollTop: $('#chat').prop("scrollHeight")
     // }, 500);
