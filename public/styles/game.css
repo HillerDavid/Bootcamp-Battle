@@ -78,8 +78,8 @@ i.far.fa-circle {
 
 /* Chat containers */
 .outgoing-message-container {
-  border: 2px solid grey;
-  background-color: #303e4d;
+  border: 2px solid #303e4d;
+  background-color: lightskyblue;
   border-radius: 5px;
   padding: 10px;
   margin: 10px 0;

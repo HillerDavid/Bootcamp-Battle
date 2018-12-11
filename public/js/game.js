@@ -16,7 +16,22 @@ $('#terminal').terminal(function (cmd) {
 function incomingChat(data) {
     console.log(`User: ${data.user}`)
     console.log(`Message: ${data.message}`)
-    var incomingMessage = `${data.message}`
+    let incomingMessage = `${data.message}`
+    let incomingUserName = `${data.user}`
+    let chatDiv = $('<div>')
+    chatDiv.addClass('outgoing-message-container darker')
+    let avatar = $('<img>')
+    avatar.attr({
+        'src': '/images/default-slack-2.png'
+    }, {
+        'alt': 'Avatar'
+    })
+    let playerName = $('<h6>')
+    playerName.text(incomingUserName)
+    let messageText = $('<p>')
+    messageText.text(incomingMessage)
+    chatDiv.append(avatar, playerName, messageText)
+    $('#chat').append(chatDiv)
     scrollChat()
 }
 
@@ -39,14 +54,7 @@ $('#chat-button').on('click', function (event) {
     let messageText = $('<p>')
     messageText.text(message)
     chatDiv.append(avatar, messageText)
-<<<<<<< HEAD
-    $("#chat").append(chatDiv)
-=======
     $('#chat').append(chatDiv)
-    // .animate({
-    //     scrollTop: $('#chat').prop("scrollHeight")
-    // }, 500);
->>>>>>> master
     $('#chat-message-area').val('')
     scrollChat()
 })
