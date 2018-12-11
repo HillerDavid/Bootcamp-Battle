@@ -11,6 +11,9 @@ module.exports = function(io, game) {
         //Set up an event for when a player sends a command
         socket.on('command', parseCommand)
 
+        //Set up an event for when a player sends a message
+        socket.on('chat', updateChat)
+
         //Set up an event for when a player disconnects
         socket.on('disconnect', removePlayer)
 
@@ -126,6 +129,11 @@ module.exports = function(io, game) {
                 return
             }
             
+        }
+
+        //When chat is recieved send out a message to everyone else, attatching the player name
+        function updateChat(data) {
+            socket.broadcast.emit('chat', {user: game.players[socket.id].player_name, message: data})
         }
 
         //Call the game obj method to remove a given player
