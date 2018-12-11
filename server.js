@@ -3,6 +3,8 @@
 require('dotenv').config()
 let express = require('express')
 let exphbs = require('express-handlebars')
+let session = require('express-session')
+let passport = require('./config/passport')
 
 let db = require('./models')
 
@@ -15,6 +17,10 @@ let PORT = process.env.PORT || 3000
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(express.static('public'))
+
+app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true }))
+app.use(passport.initialize())
+app.use(passport.session())
 
 // Handlebars
 app.engine(
