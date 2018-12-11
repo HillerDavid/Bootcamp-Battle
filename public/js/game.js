@@ -5,6 +5,8 @@ socket.on('chat', incomingChat)
 function incomingChat(data) {
     console.log(`User: ${data.user}`)
     console.log(`Message: ${data.message}`)
+    var incomingMessage = `${data.message}`
+    scrollChat()
 }
 
 function sendMessage(message) {
