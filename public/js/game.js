@@ -42,6 +42,12 @@ $('#chat-button').on('click', function (event) {
     scrollChat()
 })
 
+$('#chat-message-area').on('keyup', function (event) {
+    if (event.key !== 'Enter') return
+    $('#chat-button').trigger('click')
+    event.preventDefault()
+})
+
 function scrollChat() {
     let chatLength = $('#chat > .outgoing-message-container').length
     // console.log(chatLength)
