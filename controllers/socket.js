@@ -72,6 +72,7 @@ module.exports = function(io, game) {
             }
             //If the command is console console.log that players info
             if (command === 'console') {
+                // game.methods.giveItem(game.players[socket.id], 'Health Potion', 0, 0, 10, 0)
                 console.log(game.players[socket.id].print())
                 return
             }

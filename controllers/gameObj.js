@@ -1,5 +1,6 @@
 let Player = require('./playerObj')
 let Enemy = require('./enemyObj')
+let Item = require('./itemObj')
 let db = require('../models')
 
 let game = {
@@ -19,6 +20,10 @@ let game = {
             game.players[tempKey] = new Player(data.id, data.player_name, data.attack,
                 data.defense, data.hp, data.mp, data.currency, data.homework_completed,
                 data.exp, data.level)
+
+            for(let item of data.Items) {
+                game.methods.giveItem(game.players[tempKey], item.item_name, item.attack, item.defense, item.hp, item.mp, item.equipped)
+            }
         },
 
         //When a player connects on socket associate that socket id with the player object already created
@@ -51,6 +56,32 @@ let game = {
             }
         },
 
+        giveItem: function(player, item_name, attack, defense, hp, mp, shouldSave) {
+            for(let playerItem of player.inventory) {
+                if (playerItem.item_name === item_name) {
+                    playerItem.quantity++
+                    console.log(player.inventory)
+                    return
+                }
+            }
+            player.inventory.push(new Item(item_name, attack, defense, hp, mp, false))
+            if (shouldSave) {
+                game.saveItem(player, item_name)
+            }
+            // console.log(player.inventory)
+        },
+
+        removeItem: function(player, item) {
+            db.Item.destroy({
+                where: {
+                    PlayerId: player.player_id,
+                    item_name: item.item_name
+                }
+            }).then(() => {
+                console.log('Item removed from the database')
+            })
+        },
+
         //Remove the player from the game obj
         removePlayer: function(key) {
             //If a player with that key exists
@@ -62,6 +93,20 @@ let game = {
                 },[key])
                 
             }
+        },
+
+        saveItem: function(player, item) {
+            db.Item.create({
+                item_name: item.item_name,
+                attack: item.attack,
+                defense: item.defense,
+                hp: item.hp,
+                mp: item.mp,
+                equipped: item.equipped,
+                PlayerId: player.player_id
+            }).then(() => {
+                console.log('Item added to the database')
+            })
         },
 
         //Save the player or players

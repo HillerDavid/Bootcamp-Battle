@@ -13,6 +13,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
     this.reference
     this.currentEnemy
     this.attacked = false
+    this.inventory = []
     
     //This is the method where the player actually attacks the enemy they are fighting
     this.attackCommand = function(){
