@@ -1,91 +1,52 @@
-{{!--
-
-<body id="LoginForm">
+<section class="login-block">
+    <nav class="battle-links">
+      <ul class="nav justify-content-center">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/HillerDavid/Bootcamp-Battle#readme" target="_blank">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Getting Started</a>
+        </li>
+      </ul>
+    </nav>
   <div class="container">
-    <div class="login-form">
-      <div class="main-div">
-        <div class="panel">
-          <h2>Bootcamp Battle</h2>
-          <hr>
-          <h5>Login Page</h5>
-          <p>Please enter your email and password</p>
+    <div class="row">
+      <div class="col-md-4 login-sec">
+        <div class="login-header">
+          <h2 class="text-center">Bootcamp Battle</h2>
         </div>
-        <form id="Login">
+        <form class="login-form">
           <div class="form-group">
-            <input type="user" class="form-control" id="input-user" placeholder="Player Name">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" placeholder="Username" id="input-user">
           </div>
           <div class="form-group">
-            <input type="email" class="form-control" id="input-email" placeholder="Email Address">
+            <label for="email">Email Address</label>
+            <input type="email" class="form-control" placeholder="Email Address" id="input-email">
           </div>
           <div class="form-group">
-            <input type="password" class="form-control" id="input-password" placeholder="Password">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" placeholder="Password" id="input-password">
           </div>
           <div class="row">
             <div class="col-6">
-              <div class="forgot">
-                <a href="#">Forgot password?</a>
-              </div>
+              <button type="button" class="btn btn-primary btn-sm float-left" id="login-button">Login</button>
             </div>
             <div class="col-6">
-              <div class="register">
-                <a href="#" id="register-btn">Register</a>
-              </div>
+              <button type="button" class="btn btn-primary btn-sm float-right" id="register-button">Register</button>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary" id="login-btn">Login</button>
         </form>
+      </div>
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-md-12 banner-sec">
+            {{!-- Empty div here helps to display the image properly --}}
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  </div> --}}
-  <section class="login-block">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4 login-sec">
-          <div class="login-header">
-            <h2 class="text-center">Bootcamp Battle</h2>
-          </div>
-          <form class="login-form">
-            <div class="form-group">
-              <label for="username" class="text-uppercase">Username</label>
-              <input type="text" class="form-control" placeholder="Username" id="input-user">
-            </div>
-            <div class="form-group">
-              <label for="email" class="text-uppercase">Email Address</label>
-              <input type="email" class="form-control" placeholder="Email Address" id="input-email">
-            </div>
-            <div class="form-group">
-              <label for="password" class="text-uppercase">Password</label>
-              <input type="password" class="form-control" placeholder="Password" id="input-password">
-            </div>
-            <div class="row">
-              <div class="col-6">
-                <button type="button" class="btn btn-primary btn-sm float-left" id="login-button">Login</button>
-              </div>
-              <div class="col-6">
-                <button type="button" class="btn btn-primary btn-sm float-right" id="register-button">Register</button>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="col-md-8">
-          <div class="row">
-            <div class="col-md-12 banner-sec">
-              <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                <ol class="carousel-indicators">
-                  <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                </ol>
-                <div class="carousel-inner" role="listbox">
-                  <div class="carousel-item active">
-                    <img class="d-block img-fluid" src="https://static.pexels.com/photos/33972/pexels-photo.jpg" alt="First slide">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="/js/index.js"></script>
+</section>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="/js/index.js"></script>
