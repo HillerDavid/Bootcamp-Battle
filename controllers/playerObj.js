@@ -46,7 +46,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
     }
 
     //Move the player around the world
-    this.moveCommand = function(room) {
+    this.move = function(room) {
         //Define the available areas
         let rooms = ['home', 'panera', 'class', 'vending machine']
         //If the area they are trying to go to is an available area and they are not in the process of fighting an enemy 
@@ -66,5 +66,14 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
             }
         }
         return string
+    }
+
+    //Heal the user if they are able to sleep
+    this.sleep = function() {
+        if (this.room === 'home') {
+            this.hp = 0
+            return true
+        }
+        return false
     }
 }
