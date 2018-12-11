@@ -35,6 +35,6 @@ function scrollChat() {
     let chatLength = $('#chat > .outgoing-message-container').length
     // console.log(chatLength)
     if (chatLength > 6) {
-        $('#chat > .outgoing-message-container:first-child').remove()
+        $('#chat > .outgoing-message-container').first().remove()
     }
 }
