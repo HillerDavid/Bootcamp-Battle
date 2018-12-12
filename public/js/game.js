@@ -1,6 +1,16 @@
 let socket = io.connect()
+let basher
 
 socket.on('chat', incomingChat)
+socket.on('command-response', (response) => {
+    basher.echo(response.message)
+    if (response.level) {
+        let image = `/images/${response.level}.jpg`
+        console.log(image)
+        $('#game-background').attr('src', image)
+    }
+})
+
 
 $.post('/api/identify', {number: localStorage.number}).then(function() {
     socket.emit('identifier', localStorage.number)
@@ -9,14 +19,7 @@ $.post('/api/identify', {number: localStorage.number}).then(function() {
 $('#terminal').terminal(function (cmd) {
     let userCommand = cmd
     socket.emit('command', userCommand)
-    socket.once('command-response', (response) => {
-        this.echo(response.message)
-        if (response.level) {
-            let image = `/images/${response.level}.jpg`
-            console.log(image)
-            $('#game-background').attr('src', image)
-        }
-    })
+    basher = this
 }, {
     greetings: 'Basher loaded...\r\nWelcome to Bootcamp Battle',
     prompt: '$ '
