@@ -12,7 +12,9 @@ socket.on('command-response', (response) => {
 })
 
 
-$.post('/api/identify', {number: localStorage.number}).then(function() {
+$.post('/api/identify', {
+    number: localStorage.number
+}).then(function () {
     socket.emit('identifier', localStorage.number)
 })
 
@@ -84,3 +86,32 @@ function scrollChat() {
         $('#chat > .outgoing-message-container').first().remove()
     }
 }
+
+// Testing object for displayActiveUsers function, holding each active user in a certain room.
+var activeUserObject = {
+    panera: ['Michael', 'Ben'],
+    class: ['Will', 'David']
+}
+
+function displayActiveUsers() {
+    // Empty array or object should be defined that will populate and update as users enter and leave and area
+    // Everytime a user enters or leaves a specific area, this function should be called which displays all active users in the object/array
+    activeUserObject.panera.forEach(function (elem) {
+        // console.log(elem)
+        let userName = ' ' + elem
+        let localUsers = $('#active-users-slack')
+        let activeUser = $('<li>')
+        activeUser.addClass('nav-item')
+        let userLink = $('<a>')
+        userLink.addClass('nav-link')
+        userLink.css("color", "whitesmoke")
+        let online = $('<i>')
+        online.addClass('fa-sm fas fa-circle')
+        userLink.append(online, userName)
+        activeUser.append(userLink)
+        localUsers.append(activeUser)
+    })
+}
+
+// This function works if you un-comment the userName in the function and call it.
+displayActiveUsers()
