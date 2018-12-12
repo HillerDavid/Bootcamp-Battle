@@ -19,10 +19,7 @@ module.exports = function(io, game) {
 
         //When a player identifies themselves you connect the player obj to the socket connection
         function identifyPlayer(data) {
-            if (game.players[data]) {
-                game.methods.associatePlayer(data, socket.id)
-                return
-            }
+            game.methods.associatePlayer(data, socket.id)
         }
 
         //When a player sends a command respond accordingly

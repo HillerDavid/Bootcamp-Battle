@@ -36,7 +36,7 @@ app.set('view engine', 'handlebars')
 let game = require('./controllers/gameObj')
 
 // Routes
-require('./controllers/routes/apiRoutes')(app, game.methods.addPlayer)
+require('./controllers/routes/apiRoutes')(app, game)
 require('./controllers/routes/htmlRoutes')(app)
 require('./controllers/socket')(io, game)
 
