@@ -105,7 +105,7 @@ module.exports = function(io, game) {
             if (command === 'move') {
                 //Execute the command for the player
                 game.players[socket.id].move(modifier)
-                socket.emit('command-response', `${game.players[socket.id].player_name} has moved to ${modifier}!`)
+                socket.emit('command-response', {message: `${game.players[socket.id].player_name} has moved to ${modifier}!`, level: `${modifier}`})
                 //If the player moves to the class create an enemy for that player
                 if (modifier === 'class') {
                     game.methods.createEnemy([game.players[socket.id]])
