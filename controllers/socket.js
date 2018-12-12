@@ -33,7 +33,7 @@ module.exports = function(io, game) {
                 //If the player has the ability to attack right now
                 if (game.players[socket.id].canAttack()) {
                     console.log('Player attacked')
-                    socket.emit('command-response', `${game.players[socket.id].player_name} attacks!`)
+                    socket.emit('command-response', {message: `${game.players[socket.id].player_name} attacks!`})
                     //The player attackCommand returns whether the enemy they are fighting is still alive or not
                     if (!game.players[socket.id].attackCommand()) {
                         console.log('Enemy is dead')
@@ -105,6 +105,9 @@ module.exports = function(io, game) {
             if (command === 'move') {
                 //Execute the command for the player
                 game.players[socket.id].move(modifier)
+                if (modifier === 'vending machine') {
+                    modifier = 'vending-machine'
+                }
                 socket.emit('command-response', {message: `${game.players[socket.id].player_name} has moved to ${modifier}!`, level: `${modifier}`})
                 //If the player moves to the class create an enemy for that player
                 if (modifier === 'class') {
@@ -116,7 +119,7 @@ module.exports = function(io, game) {
             if (command === 'save') {
                 //Save the whole game
                 game.methods.saveState()
-                socket.emit('command-response', `${game.players[socket.id].player_name} game is saved!`)
+                socket.emit('command-response', {message: `${game.players[socket.id].player_name} game is saved!`})
                 return
             }
 
@@ -124,7 +127,7 @@ module.exports = function(io, game) {
                 //If the player can sleep, they sleep
                 if (game.players[socket.id].sleep()) {
                     console.log(`${game.players[socket.id].player_name} slept and is back to 0 stress(hp)`)
-                    socket.emit('command-response', `${game.players[socket.id].player_name} slept and is back to 0 stress(hp).`)
+                    socket.emit('command-response', {message:`${game.players[socket.id].player_name} slept and is back to 0 stress(hp).`})
                     return
                 }
                 console.log(`${game.players[socket.id].player_name} is unable to sleep`)
