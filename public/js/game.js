@@ -1,6 +1,10 @@
 let socket = io.connect()
-socket.emit('identifier', localStorage.number)
+
 socket.on('chat', incomingChat)
+
+$.post('/api/identify', {number: localStorage.number}).then(function() {
+    socket.emit('identifier', localStorage.number)
+})
 
 $('#terminal').terminal(function (cmd) {
     let userCommand = cmd
