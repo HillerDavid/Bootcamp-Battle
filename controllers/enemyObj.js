@@ -19,7 +19,9 @@ module.exports = function Enemy(enemyName, attack, defense, hp, expValue, refere
             player.attacked = false
         }
         //Check if the attacked player is still alive
-        players[targetIndex].isAlive()
+        if(!players[targetIndex].isAlive()) {
+            players[targetIndex].faint()
+        }
     }
 
     //This method returns if the player can attack or not

@@ -32,7 +32,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         defense: {
             type: DataTypes.INTEGER,
-            defaultValue: 1,
+            defaultValue: 5,
             allowNull: false,
             validate: {
                 min: 0
@@ -56,7 +56,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         currency: {
             type: DataTypes.INTEGER,
-            defaultValue: 0,
+            defaultValue: 100,
             allowNull: false,
             validate: {
                 min: 0

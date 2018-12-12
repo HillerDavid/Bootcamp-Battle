@@ -1,4 +1,4 @@
-module.exports = function(io, game) {
+module.exports = function (io, game) {
     //Set up an event for a new connection
     io.on('connection', newConnection)
 
@@ -33,7 +33,7 @@ module.exports = function(io, game) {
                 //If the player has the ability to attack right now
                 if (game.players[socket.id].canAttack()) {
                     console.log('Player attacked')
-                    socket.emit('command-response', {message: `${game.players[socket.id].player_name} attacks!`})
+                    socket.emit('command-response', {message: `${game.players[socket.id].player_name} attacks...`})
                     //The player attackCommand returns whether the enemy they are fighting is still alive or not
                     if (!game.players[socket.id].attackCommand()) {
                         console.log('Enemy is dead')
@@ -41,18 +41,21 @@ module.exports = function(io, game) {
                         let enemyIndex = game.players[socket.id].currentEnemy.reference
                         //Give all the players that fought it their portion of the exp and set their currentEnemy = false
                         game.enemies[enemyIndex].payout()
+                        game.players[socket.id].levelUp()
                         //Delete the enemy from the game object
                         delete game.enemies[enemyIndex]
 
-                    //If the enemy can attack
-                    } else if (game.players[socket.id].currentEnemy.canAttack()){
-                        console.log('Enemy is alive and will attack')
-                        //Set a timer so it will attack after 2 seconds
-                        enemyAttack()
-                        // setTimeout(enemyAttack, 2000)
+                        //If the enemy can attack
                     } else {
-                        //Some players have not attacked yet, so it is still their turn
-                        console.log(`Enemy is alive but can't attack yet`)
+                        socket.emit('command-response', {message: `${game.players[socket.id].player_name} hits for ${game.players[socket.id].attackDamage}`})
+                        if (game.players[socket.id].currentEnemy.canAttack()) {
+                            console.log('Enemy is alive and will attack')
+                            //Set a timer so it will attack after 2 seconds
+                            enemyAttack()
+                        } else {
+                            //Some players have not attacked yet, so it is still their turn
+                            console.log(`Enemy is alive but can't attack yet`)
+                        }
                     }
                 } else {
                     //The player has already attacked and it is not their turn again yet
@@ -73,7 +76,7 @@ module.exports = function(io, game) {
                         return
                     }
 
-                //Otherwise the items is the whole string and quantity is assumed to be 1
+                    //Otherwise the items is the whole string and quantity is assumed to be 1
                 } else {
                     item = modifier
                     quantity = 1
@@ -133,12 +136,12 @@ module.exports = function(io, game) {
                 console.log(`${game.players[socket.id].player_name} is unable to sleep`)
                 return
             }
-            
+
         }
 
         //When chat is recieved send out a message to everyone else, attatching the player name
         function updateChat(data) {
-            socket.broadcast.emit('chat', {user: game.players[socket.id].player_name, message: data})
+            socket.broadcast.emit('chat', { user: game.players[socket.id].player_name, message: data })
         }
 
         //Call the game obj method to remove a given player

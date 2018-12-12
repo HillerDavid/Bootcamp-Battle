@@ -14,13 +14,15 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
     this.currentEnemy
     this.attacked = false
     this.inventory = []
+    this.attackDamage
     
     //This is the method where the player actually attacks the enemy they are fighting
     this.attackCommand = function(){
         //Check if the player can attack
         if (this.canAttack()) {
             //Do damage to the enemy corresponding to the attack
-            this.currentEnemy.hp -= this.attack
+            this.attackDamage = ((Math.floor(Math.random() * 6) + 1) + this.attack + this.level) - this.currentEnemy.defense
+            this.currentEnemy.hp -= this.attackDamage
             //Store that the player has attacked already this turn
             this.attacked = true
             console.log(`${this.currentEnemy.enemyName}'s hp: ${this.currentEnemy.hp}`)
@@ -75,5 +77,20 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
             return true
         }
         return false
+    }
+
+    this.levelUp = function() {
+        if (this.exp >= this.level * 200) {
+            this.level++
+            this.exp = 0
+            this.attack++
+            this.defense + 2
+        }
+    }
+
+    this.faint = function() {
+        this.room = 'home'
+        this.hp = 0
+        this.currency -= this.level * 20
     }
 }
