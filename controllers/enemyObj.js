@@ -6,11 +6,13 @@ module.exports = function Enemy(enemyName, attack, defense, hp, expValue, refere
     this.expValue = expValue
     this.reference = reference
     this.players = players
+    this.attackDamage
 
     //This method is where the enemy actually fights back
     this.attackCommand = function(){
         //Pick a random player being fought to target
         let targetIndex = Math.floor(Math.random() * players.length)
+        this.attackDamage = ((Math.floor(Math.random() * 6) + 1) + this.attack) - players[targetIndex].defense
         //Do damage to that player
         players[targetIndex].hp += this.attack
         console.log(`${players[targetIndex].player_name}'s hp: ${players[targetIndex].hp}`)
@@ -21,7 +23,9 @@ module.exports = function Enemy(enemyName, attack, defense, hp, expValue, refere
         //Check if the attacked player is still alive
         if(!players[targetIndex].isAlive()) {
             players[targetIndex].faint()
+            return false
         }
+        return true
     }
 
     //This method returns if the player can attack or not

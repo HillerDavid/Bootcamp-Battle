@@ -51,7 +51,13 @@ module.exports = function (io, game) {
                         if (game.players[socket.id].currentEnemy.canAttack()) {
                             console.log('Enemy is alive and will attack')
                             //Set a timer so it will attack after 2 seconds
-                            enemyAttack()
+                            if (!game.players[socket.id].currentEnemy.attackCommand()) {
+                                socket.emit('command-response', {message: `${game.players[socket.id].currentEnemy.enemyName} hits for ${game.players[socket.id].currentEnemy.attackDamage}`})
+                                socket.emit('command-response', {message:  `The stress is too much! ${game.players[socket.id].player_name} fainted.`})
+                                socket.emit('command-response', {message:  `${game.players[socket.id].player_name} wakes up energized and ready to try again!`, level: game.players[socket.id].room})
+                            } else {
+                                socket.emit('command-response', {message: `${game.players[socket.id].currentEnemy.enemyName} hits for ${game.players[socket.id].currentEnemy.attackDamage}`})
+                            }
                         } else {
                             //Some players have not attacked yet, so it is still their turn
                             console.log(`Enemy is alive but can't attack yet`)
@@ -147,11 +153,6 @@ module.exports = function (io, game) {
         //Call the game obj method to remove a given player
         function removePlayer() {
             game.methods.removePlayer(socket.id)
-        }
-
-        //When the alarm goes off the enemy attacks
-        function enemyAttack() {
-            game.players[socket.id].currentEnemy.attackCommand()
         }
     }
 }
