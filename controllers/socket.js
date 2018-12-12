@@ -19,10 +19,7 @@ module.exports = function (io, game) {
 
         //When a player identifies themselves you connect the player obj to the socket connection
         function identifyPlayer(data) {
-            if (game.players[data]) {
-                game.methods.associatePlayer(data, socket.id)
-                return
-            }
+            game.methods.associatePlayer(data, socket.id)
         }
 
         //When a player sends a command respond accordingly
@@ -36,7 +33,7 @@ module.exports = function (io, game) {
                 //If the player has the ability to attack right now
                 if (game.players[socket.id].canAttack()) {
                     console.log('Player attacked')
-                    socket.emit('command-response', `${game.players[socket.id].player_name} attacks...`)
+                    socket.emit('command-response', {message: `${game.players[socket.id].player_name} attacks...`})
                     //The player attackCommand returns whether the enemy they are fighting is still alive or not
                     if (!game.players[socket.id].attackCommand()) {
                         console.log('Enemy is dead')
@@ -50,7 +47,7 @@ module.exports = function (io, game) {
 
                         //If the enemy can attack
                     } else {
-                        
+                        socket.emit('command-response', {message: `${game.players[socket.id].player_name} hits for ${game.players[socket.id].attackDamage}`})
                         if (game.players[socket.id].currentEnemy.canAttack()) {
                             console.log('Enemy is alive and will attack')
                             //Set a timer so it will attack after 2 seconds
@@ -111,7 +108,10 @@ module.exports = function (io, game) {
             if (command === 'move') {
                 //Execute the command for the player
                 game.players[socket.id].move(modifier)
-                socket.emit('command-response', `${game.players[socket.id].player_name} has moved to ${modifier}!`)
+                if (modifier === 'vending machine') {
+                    modifier = 'vending-machine'
+                }
+                socket.emit('command-response', {message: `${game.players[socket.id].player_name} has moved to ${modifier}!`, level: `${modifier}`})
                 //If the player moves to the class create an enemy for that player
                 if (modifier === 'class') {
                     game.methods.createEnemy([game.players[socket.id]])
@@ -122,7 +122,7 @@ module.exports = function (io, game) {
             if (command === 'save') {
                 //Save the whole game
                 game.methods.saveState()
-                socket.emit('command-response', `${game.players[socket.id].player_name} game is saved!`)
+                socket.emit('command-response', {message: `${game.players[socket.id].player_name} game is saved!`})
                 return
             }
 
@@ -130,7 +130,7 @@ module.exports = function (io, game) {
                 //If the player can sleep, they sleep
                 if (game.players[socket.id].sleep()) {
                     console.log(`${game.players[socket.id].player_name} slept and is back to 0 stress(hp)`)
-                    socket.emit('command-response', `${game.players[socket.id].player_name} slept and is back to 0 stress(hp).`)
+                    socket.emit('command-response', {message:`${game.players[socket.id].player_name} slept and is back to 0 stress(hp).`})
                     return
                 }
                 console.log(`${game.players[socket.id].player_name} is unable to sleep`)

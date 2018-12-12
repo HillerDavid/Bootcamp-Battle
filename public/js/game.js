@@ -1,12 +1,21 @@
 let socket = io.connect()
-socket.emit('identifier', localStorage.number)
+
 socket.on('chat', incomingChat)
+
+$.post('/api/identify', {number: localStorage.number}).then(function() {
+    socket.emit('identifier', localStorage.number)
+})
 
 $('#terminal').terminal(function (cmd) {
     let userCommand = cmd
     socket.emit('command', userCommand)
     socket.once('command-response', (response) => {
-        this.echo(response)
+        this.echo(response.message)
+        if (response.level) {
+            let image = `/images/${response.level}.jpg`
+            console.log(image)
+            $('#game-background').attr('src', image)
+        }
     })
 }, {
     greetings: 'Basher loaded...\r\nWelcome to Bootcamp Battle',
@@ -16,6 +25,23 @@ $('#terminal').terminal(function (cmd) {
 function incomingChat(data) {
     console.log(`User: ${data.user}`)
     console.log(`Message: ${data.message}`)
+    let incomingMessage = `${data.message}`
+    let incomingUserName = `${data.user}`
+    let chatDiv = $('<div>')
+    chatDiv.addClass('outgoing-message-container darker')
+    let avatar = $('<img>')
+    avatar.attr({
+        'src': '/images/default-slack-2.png'
+    }, {
+        'alt': 'Avatar'
+    })
+    let playerName = $('<h6>')
+    playerName.text(incomingUserName)
+    let messageText = $('<p>')
+    messageText.text(incomingMessage)
+    chatDiv.append(avatar, playerName, messageText)
+    $('#chat').append(chatDiv)
+    scrollChat()
 }
 
 function sendMessage(message) {
@@ -38,9 +64,6 @@ $('#chat-button').on('click', function (event) {
     messageText.text(message)
     chatDiv.append(avatar, messageText)
     $('#chat').append(chatDiv)
-    // .animate({
-    //     scrollTop: $('#chat').prop("scrollHeight")
-    // }, 500);
     $('#chat-message-area').val('')
     scrollChat()
 })

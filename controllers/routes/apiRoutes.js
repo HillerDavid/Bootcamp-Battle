@@ -1,6 +1,7 @@
 let db = require('../../models')
 let passport = require('../../config/passport')
-module.exports = function(app, cb) {
+let isAuthenticated = require('../../config/middleware/isAuthenticated')
+module.exports = function(app, game) {
     app.post('/api/createaccount', function(req, res) {
         db.Player.findOne({ where: { email:req.body.email } }).then(function(data) {
             console.log('test')
@@ -19,8 +20,21 @@ module.exports = function(app, cb) {
     app.post('/api/login', passport.authenticate('local'), function(req, res) {
         db.Player.findOne({where:{email:req.body.email}, include: [db.Item]}).then(function(data) {
             if (data) {
-                cb(req.body.number, data)
                 return res.json('/game')
+            }
+            res.end()
+        })
+    })
+
+    app.post('/api/identify', isAuthenticated, function(req, res) {
+        for(let key in game.players) {
+            if (game.players[key].hiddenNumber === req.body.number) {
+                return
+            }
+        }
+        db.Player.findOne({where:{email:req.user.email}, include: [db.Item]}).then(function(data) {
+            if (data) {
+                game.methods.addPlayer(req.body.number, data)
             }
             res.end()
         })

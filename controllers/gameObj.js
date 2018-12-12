@@ -54,6 +54,8 @@ let game = {
                 data.defense, data.hp, data.mp, data.currency, data.homework_completed,
                 data.exp, data.level)
 
+            game.players[tempKey].hiddenNumber = tempKey
+
             //Loop through all of the items in the database belonging to the player and add them to the player's inventory
             for(let item of data.Items) {
                 // console.log(item.dataValues)
@@ -64,14 +66,27 @@ let game = {
         //When a player connects on socket associate that socket id with the player object already created
         associatePlayer: function(tempKey, socketId) {
             if (game.players[tempKey]) {
+                reassociate(tempKey)
+                return
+            }
+
+            for(let key in game.players) {
+                if (game.players[key].hiddenNumber === tempKey) {
+                    reassociate(key)
+                    return
+                }
+            }
+
+            function reassociate(key) {
                 //Store the object in a temporary variable
-                let temp = game.players[tempKey]
+                let temp = game.players[key]
                 //Delete the reference to the player stored in the temporary spot
-                delete game.players[tempKey]
+                delete game.players[key]
                 //Store the object at it's new location: the player's soccket connection id
                 game.players[socketId] = temp
                 //Set reference in the player object to the socket id in case it's needed
                 game.players[socketId].reference = socketId
+                console.log('Player associated!!!')
             }
         },
 
