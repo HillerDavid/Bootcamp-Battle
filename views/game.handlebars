@@ -143,25 +143,6 @@
                         </div>
                         <div class="tab-pane fade" id="stats" role="tabpanel" aria-labelledby="stats-tab">...</div>
                         <div class="tab-pane fade" id="chat" role="tabpanel" aria-labelledby="chat-tab">
-                            <div class="outgoing-message-container lighter">
-                                <img src="/images/default-slack-1.png" alt="Avatar">
-                                <h4>New Phone Who Dis</h4>
-                                <p>Hello. How are you today?</p>
-                            </div>
-                            {{!-- <div class="outgoing-message-container darker">
-                                <img src="/images/default-slack-2.png" alt="Avatar" class="right">
-                                <p>Hey! I'm fine. Thanks for asking!</p>
-                            </div>
-
-                            <div class="outgoing-message-container lighter">
-                                <img src="/images/default-slack-1.png" alt="Avatar">
-                                <p>Sweet! So, what do you wanna do today?</p>
-                            </div>
-
-                            <div class="outgoing-message-container darker">
-                                <img src="/images/default-slack-2.png" alt="Avatar" class="right">
-                                <p>Nah, I dunno. Play soccer.. or learn more coding perhaps?</p>
-                            </div> --}}
                             <div class="row">
                                 <div class="input-group mb-0 fixed-row-bottom">
                                     <div class="input-group-prepend">
@@ -180,11 +161,9 @@
             </div>
         </div>
         <div class="col-8" id="main" style="height: 100vh;">
-            <div class="row" style="background-color: red; height: 60vh;">
-                <div class="col-12">
-                    <div>
-                        <h1>Main Area</h1>
-                    </div>
+            <div class="row" id="game-area">
+                <div class="col-12" id="game-background-div">
+                    <img src="/images/home.jpg" id="game-background">
                 </div>
             </div>
             <div class="row" style="height: 40vh">

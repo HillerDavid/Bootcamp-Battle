@@ -6,7 +6,10 @@ $('#terminal').terminal(function (cmd) {
     let userCommand = cmd
     socket.emit('command', userCommand)
     socket.once('command-response', (response) => {
-        this.echo(response)
+        this.echo(response.message)
+        let image = `/images/${response.level}.jpg`
+        console.log(image)
+        $('#game-background').attr('src', image)
     })
 }, {
     greetings: 'Basher loaded...\r\nWelcome to Bootcamp Battle',

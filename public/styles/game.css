@@ -139,3 +139,21 @@ div>.input-group {
 .force-overflow {
   min-height: 450px;
 }
+
+.clipboard {
+  border: none !important;
+}
+
+#game-area {
+  height: 60vh;
+}
+
+#game-background {
+  height: 100%;
+  width: 100%;
+  margin: auto;
+}
+
+#game-background-div {
+  padding: 0;
+}
