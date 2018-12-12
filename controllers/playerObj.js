@@ -1,6 +1,6 @@
 module.exports = function Player(player_id, player_name, attack, defense, hp, mp, currency, homework_completed, exp, level){
     this.player_id = player_id
-    this.player_name = player_name
+    this.name = player_name
     this.attack = attack
     this.defense = defense
     this.hp = hp
@@ -15,6 +15,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
     this.attacked = false
     this.inventory = []
     this.attackDamage
+    this.challenges = []
     
     //This is the method where the player actually attacks the enemy they are fighting
     this.attackCommand = function(){
@@ -22,12 +23,20 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         if (this.canAttack()) {
             //Do damage to the enemy corresponding to the attack
             this.attackDamage = ((Math.floor(Math.random() * 6) + 1) + this.attack + this.level) - this.currentEnemy.defense
-            this.currentEnemy.hp -= this.attackDamage
+            this.currentEnemy.hp += this.attackDamage
             //Store that the player has attacked already this turn
             this.attacked = true
-            console.log(`${this.currentEnemy.enemyName}'s hp: ${this.currentEnemy.hp}`)
+            if (this.currentEnemy.level) {
+                this.currentEnemy.attacked = false
+            }
+            console.log(`${this.currentEnemy.name}'s hp: ${this.currentEnemy.hp}`)
             //Return whether the enemy is alive or not
-            return this.currentEnemy.isAlive()  
+            let enemyAlive = this.currentEnemy.isAlive() 
+            if (this.currentEnemy.level && !enemyAlive) {
+                this.currentEnemy.faint()
+                this.currentEnemy = undefined
+            }
+            return enemyAlive
         }
         //The player does not have the ability to attack, so the enemy must still be alive
         return true
@@ -36,7 +45,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
     //Returns if the player has the ability to attack
     this.canAttack = function() {
         //If they are in the right room, they haven't attacked yet this turn, AND are fighting an enemy they can attack
-        if (this.room === 'class' && !this.attacked && this.currentEnemy) {
+        if ((this.room === 'class' || this.room === 'panera') && !this.attacked && this.currentEnemy) {
             return true
         }
         return false
@@ -55,7 +64,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         if (rooms.includes(room) && !this.currentEnemy) {
             //Move them to the room they are trying to access
             this.room = room
-            console.log(`${this.player_name} moved to ${this.room}`)
+            console.log(`${this.name} moved to ${this.room}`)
         }
     }
 
@@ -89,6 +98,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
     }
 
     this.faint = function() {
+        this.currentEnemy = undefined
         this.room = 'home'
         this.hp = 0
         this.currency -= this.level * 20
