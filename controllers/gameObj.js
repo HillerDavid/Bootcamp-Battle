@@ -77,16 +77,17 @@ let game = {
 
         //Create an enemy object in the game enemy object list and associate it with a player
         createEnemy: function(players) {
+            let currentPlayer = players[0]
             //Create the reference where the enemy will be kept
-            game.enemies[players[0].reference] = {}
+            game.enemies[currentPlayer.reference] = {}
             //Create the enemy object and put it in it's location, giving it an array of players it is fighting
-            game.enemies[players[0].reference] = new Enemy('assignment', 1, 1, 2, 100, players[0].reference, players)
+            game.enemies[currentPlayer.reference] = new Enemy('assignment', (currentPlayer.level * 2) + 4, currentPlayer.level, (currentPlayer.level * 5) + 9, currentPlayer.level * 40, currentPlayer.reference, players)
             //Loop through the players
             for(let player of players) {
                 //If the player isn't currently fighting an enemy
                 if (!player.currentEnemy) {
                     //Set the player's currentEnemy to this one
-                    player.currentEnemy = game.enemies[players[0].reference]
+                    player.currentEnemy = game.enemies[currentPlayer.reference]
                 }
             }
         },
