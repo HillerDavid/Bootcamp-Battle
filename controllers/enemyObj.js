@@ -1,19 +1,25 @@
-module.exports = function Enemy(enemyName, attack, defense, hp, expValue, reference, players){
-    this.enemyName = enemyName
+module.exports = function Enemy(name, attack, defense, hp, expValue, reference, players){
+    this.name = name
     this.attack = attack
     this.defense = defense
-    this.hp = hp
+    this.maxHp = hp
+    this.hp = 0
     this.expValue = expValue
     this.reference = reference
     this.players = players
+    this.attackDamage
 
     //This method is where the enemy actually fights back
     this.attackCommand = function(){
         //Pick a random player being fought to target
         let targetIndex = Math.floor(Math.random() * players.length)
+        this.attackDamage = ((Math.floor(Math.random() * 6) + 1) + this.attack) - players[targetIndex].defense
+        if (this.attackDamage < 1) {
+            this.attackDamage = 0
+        }
         //Do damage to that player
-        players[targetIndex].hp += this.attack
-        console.log(`${players[targetIndex].player_name}'s hp: ${players[targetIndex].hp}`)
+        players[targetIndex].hp += this.attackDamage
+        console.log(`${players[targetIndex].name}'s hp: ${players[targetIndex].hp}`)
         //Loop through the players being fought and allow them to attack again
         for(let player of players) {
             player.attacked = false
@@ -21,7 +27,9 @@ module.exports = function Enemy(enemyName, attack, defense, hp, expValue, refere
         //Check if the attacked player is still alive
         if(!players[targetIndex].isAlive()) {
             players[targetIndex].faint()
+            return false
         }
+        return true
     }
 
     //This method returns if the player can attack or not
@@ -30,7 +38,7 @@ module.exports = function Enemy(enemyName, attack, defense, hp, expValue, refere
         for(let player of players) {
             //If one of the players fighting hasn't attacked yet wait until they have ALL attacked
             if (player.canAttack()) {
-                console.log(`${player.player_name} has not attacked`)
+                console.log(`${player.name} has not attacked`)
                 return false
             }
         }
@@ -39,10 +47,7 @@ module.exports = function Enemy(enemyName, attack, defense, hp, expValue, refere
 
     //Return whether the enemy is still alive or not
     this.isAlive = function(){
-        if (this.hp > 0) {
-            return true
-        }
-        return false
+        return(this.hp < this.maxHp)
     }
 
     //Give the players their reward and remove their reference to the enemy
