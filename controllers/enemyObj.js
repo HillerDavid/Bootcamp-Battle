@@ -14,6 +14,9 @@ module.exports = function Enemy(name, attack, defense, hp, expValue, reference, 
         //Pick a random player being fought to target
         let targetIndex = Math.floor(Math.random() * players.length)
         this.attackDamage = ((Math.floor(Math.random() * 6) + 1) + this.attack) - players[targetIndex].defense
+        if (this.attackDamage < 1) {
+            this.attackDamage = 0
+        }
         //Do damage to that player
         players[targetIndex].hp += this.attack
         console.log(`${players[targetIndex].name}'s hp: ${players[targetIndex].hp}`)

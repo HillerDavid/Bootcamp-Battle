@@ -23,6 +23,9 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         if (this.canAttack()) {
             //Do damage to the enemy corresponding to the attack
             this.attackDamage = ((Math.floor(Math.random() * 6) + 1) + this.attack + this.level) - this.currentEnemy.defense
+            if (this.attackDamage < 1) {
+                this.attackDamage = 0
+            }
             this.currentEnemy.hp += this.attackDamage
             //Store that the player has attacked already this turn
             this.attacked = true
