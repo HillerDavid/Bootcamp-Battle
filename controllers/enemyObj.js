@@ -1,10 +1,11 @@
-module.exports = function Enemy(name, attack, defense, hp, expValue, reference, players){
+module.exports = function Enemy(name, attack, defense, hp, expValue, currency, reference, players){
     this.name = name
     this.attack = attack
     this.defense = defense
     this.maxHp = hp
     this.hp = 0
     this.expValue = expValue
+    this.currency = currency
     this.reference = reference
     this.players = players
     this.attackDamage
@@ -54,10 +55,14 @@ module.exports = function Enemy(name, attack, defense, hp, expValue, reference, 
     this.payout = function() {
         //Calculate how much experience each player gets
         let individualExp = this.expValue / this.players.length
+        //Calculate how much currency each player gets
+        let individualCurrency = Math.floor(this.currency / this.players.length)
         //Loop through the players
         for(let player of players) {
             //Give the player it's portion of the experience
             player.exp += individualExp
+            //Give the player it's portion of the currency
+            player.currency += individualCurrency
             //Reset their ability to attack
             player.attacked = false
             //Remove the reference to the enemy
