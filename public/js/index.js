@@ -1,4 +1,4 @@
-$('#login-button').on('click', function() {
+$('#login-button').on('click', function () {
     event.preventDefault()
     let email = $('#input-email').val().trim()
     let password = $('#input-password').val().trim()
@@ -15,10 +15,10 @@ $('#login-button').on('click', function() {
     $('#input-email').val('')
     $('#input-password').val('')
     $('#input-user').val('')
-    
+
 })
 
-$('#register-button').on('click', function() {
+$('#register-button').on('click', function () {
     event.preventDefault()
     let email = $('#input-email').val().trim()
     let password = $('#input-password').val().trim()
@@ -39,7 +39,7 @@ $('#register-button').on('click', function() {
 
 function signUpUser(userData) {
     $.post('/api/createaccount', userData).then(() => {
-        
+
     })
 }
 

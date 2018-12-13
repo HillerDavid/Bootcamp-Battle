@@ -46,7 +46,7 @@ function incomingChat(data) {
     messageText.text(incomingMessage)
     chatDiv.append(avatar, playerName, messageText)
     $('#chat').append(chatDiv)
-    scrollDown()
+    scrollChat()
 }
 
 function sendMessage(message) {
@@ -68,9 +68,9 @@ $('#chat-button').on('click', function (event) {
     let messageText = $('<p>')
     messageText.text(message)
     chatDiv.append(avatar, messageText)
-    $('#message-screen').append(chatDiv)
+    $('#chat').append(chatDiv)
     $('#chat-message-area').val('')
-    scrollDown()
+    scrollChat()
 })
 
 $('#chat-message-area').on('keyup', function (event) {
@@ -79,20 +79,24 @@ $('#chat-message-area').on('keyup', function (event) {
     event.preventDefault()
 })
 
-function scrollDown() {
-    $('#message-screen').animate({scrollTop: $('#message-screen').prop("scrollHeight")}, 500);
+function scrollChat() {
+    let chatLength = $('#chat > .outgoing-message-container').length
+    // console.log(chatLength)
+    if (chatLength > 6) {
+        $('#chat > .outgoing-message-container').first().remove()
+    }
 }
 
 // Testing object for displayActiveUsers function, holding each active user in a certain room.
 var activeUserObject = {
     panera: ['Michael', 'Ben', 'David', 'Will'],
-    class: ['Ben', 'David']
+    class: ['Will', 'David']
 }
 
 function displayActiveUsers() {
     // Empty array or object should be defined that will populate and update as users enter and leave and area
     // Everytime a user enters or leaves a specific area, this function should be called which displays all active users in the object/array
-    activeUserObject.class.forEach(function (elem) {
+    activeUserObject.panera.forEach(function (elem) {
         // console.log(elem)
         let userName = ' ' + elem
         let localUsers = $('#direct-message-column')

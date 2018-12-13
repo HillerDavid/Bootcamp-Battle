@@ -158,50 +158,16 @@ div>.input-group {
   padding: 0;
 }
 
-.slacker {
+#direct-message-colum {
   overflow-x: hidden;
   overflow-y: scroll;
-  height: 100vh;
+  height: 272px;
 }
-
-#message-screen{
-  display: block;
-  height: 95vh;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  padding: 2px;
-  background-color: whitesmoke;
-}
-
-#message-input {
-  height: 5vh;
-}
-
 ::-webkit-scrollbar {
   width: 0px;  /* remove scrollbar space */
   background: transparent;  /* optional: just make scrollbar invisible */
 }
-
-/* width */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: #303e4d; 
-}
-
-#message-screen::-webkit-scrollbar-track {
-  background: whitesmoke;
-}
- 
-/* Handle */
+/* optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
-  background: #888; 
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #FF0000;
 }
