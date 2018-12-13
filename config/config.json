@@ -1,11 +1,7 @@
 {
   "development": {
     "username": "root",
-<<<<<<< HEAD
     "password": "root",
-=======
-    "password": "DVSLegacy289!",
->>>>>>> 815c2f83bd07feeb4cf8f3f1f936cfd094dff2a6
     "database": "bootcamp_battle_db",
     "host": "localhost",
     "dialect": "mysql"

@@ -1,5 +1,6 @@
 let socket = io.connect()
 let basher
+let activeUserObject
 
 socket.on('chat', incomingChat)
 socket.on('command-response', (response) => {
@@ -10,6 +11,8 @@ socket.on('command-response', (response) => {
         $('#game-background').attr('src', image)
     }
 })
+
+socket.on('player-positions', displayActiveUsers)
 
 
 $.post('/api/identify', {
@@ -83,17 +86,28 @@ function scrollDown() {
     $('#message-screen').animate({scrollTop: $('#message-screen').prop("scrollHeight")}, 500);
 }
 
-// Testing object for displayActiveUsers function, holding each active user in a certain room.
-var activeUserObject = {
-    panera: ['Michael', 'Ben', 'David', 'Will'],
-    class: ['Ben', 'David']
-}
-
-function displayActiveUsers() {
+function displayActiveUsers(data) {
+    activeUserObject = data.locations
     // Empty array or object should be defined that will populate and update as users enter and leave and area
     // Everytime a user enters or leaves a specific area, this function should be called which displays all active users in the object/array
-    activeUserObject.class.forEach(function (elem) {
+    let room
+    let name = data.playerName
+    for(let key in activeUserObject) {
+        for(let i = 0; i < activeUserObject[key].length; i++) {
+            if (activeUserObject[key][i] === data.playerName) {
+                room = key
+                break
+            }
+        }
+        if (room) {
+            break
+        }
+    }
+    activeUserObject[room].forEach(function (elem) {
         // console.log(elem)
+        if (elem === name) {
+            return
+        }
         let userName = ' ' + elem
         let localUsers = $('#direct-message-column')
         let activeUser = $('<li>')
@@ -110,4 +124,4 @@ function displayActiveUsers() {
 }
 
 // This function works if you un-comment the userName in the function and call it.
-displayActiveUsers()
+// displayActiveUsers()

@@ -164,6 +164,17 @@ module.exports = function (io, game) {
             if (command === 'move') {
                 //Execute the command for the player
                 game.players[socket.id].move(modifier)
+                let playerLocations = {}
+                for(let key in game.players) {
+                    let player = game.players[key]
+                    if (!playerLocations[player.room]) {
+                        playerLocations[player.room] = [] 
+                    }
+                    playerLocations[player.room].push(player.name)
+                }
+                for(let key in game.players) {
+                    io.to(key).emit('player-positions', { locations: playerLocations, playerName: game.players[key].name })
+                }
                 if (modifier === 'vending machine') {
                     modifier = 'vending-machine'
                 }
