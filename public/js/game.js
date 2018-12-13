@@ -12,7 +12,9 @@ socket.on('command-response', (response) => {
 })
 
 
-$.post('/api/identify', {number: localStorage.number}).then(function() {
+$.post('/api/identify', {
+    number: localStorage.number
+}).then(function () {
     socket.emit('identifier', localStorage.number)
 })
 
@@ -44,7 +46,7 @@ function incomingChat(data) {
     messageText.text(incomingMessage)
     chatDiv.append(avatar, playerName, messageText)
     $('#chat').append(chatDiv)
-    scrollChat()
+    scrollDown()
 }
 
 function sendMessage(message) {
@@ -66,9 +68,9 @@ $('#chat-button').on('click', function (event) {
     let messageText = $('<p>')
     messageText.text(message)
     chatDiv.append(avatar, messageText)
-    $('#chat').append(chatDiv)
+    $('#message-screen').append(chatDiv)
     $('#chat-message-area').val('')
-    scrollChat()
+    scrollDown()
 })
 
 $('#chat-message-area').on('keyup', function (event) {
@@ -77,10 +79,35 @@ $('#chat-message-area').on('keyup', function (event) {
     event.preventDefault()
 })
 
-function scrollChat() {
-    let chatLength = $('#chat > .outgoing-message-container').length
-    // console.log(chatLength)
-    if (chatLength > 6) {
-        $('#chat > .outgoing-message-container').first().remove()
-    }
+function scrollDown() {
+    $('#message-screen').animate({scrollTop: $('#message-screen').prop("scrollHeight")}, 500);
 }
+
+// Testing object for displayActiveUsers function, holding each active user in a certain room.
+var activeUserObject = {
+    panera: ['Michael', 'Ben', 'David', 'Will'],
+    class: ['Ben', 'David']
+}
+
+function displayActiveUsers() {
+    // Empty array or object should be defined that will populate and update as users enter and leave and area
+    // Everytime a user enters or leaves a specific area, this function should be called which displays all active users in the object/array
+    activeUserObject.class.forEach(function (elem) {
+        // console.log(elem)
+        let userName = ' ' + elem
+        let localUsers = $('#direct-message-column')
+        let activeUser = $('<li>')
+        activeUser.addClass('nav-item')
+        let userLink = $('<a>')
+        userLink.addClass('nav-link')
+        userLink.css("color", "whitesmoke")
+        let online = $('<i>')
+        online.addClass('fa-sm fas fa-circle')
+        userLink.append(online, userName)
+        activeUser.append(userLink)
+        localUsers.append(activeUser)
+    })
+}
+
+// This function works if you un-comment the userName in the function and call it.
+displayActiveUsers()
