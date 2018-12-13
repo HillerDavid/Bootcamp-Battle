@@ -18,7 +18,7 @@ module.exports = function Enemy(name, attack, defense, hp, expValue, reference, 
             this.attackDamage = 0
         }
         //Do damage to that player
-        players[targetIndex].hp += this.attack
+        players[targetIndex].hp += this.attackDamage
         console.log(`${players[targetIndex].name}'s hp: ${players[targetIndex].hp}`)
         //Loop through the players being fought and allow them to attack again
         for(let player of players) {

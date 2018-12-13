@@ -20,6 +20,11 @@ module.exports = function (io, game) {
         //When a player identifies themselves you connect the player obj to the socket connection
         function identifyPlayer(data) {
             game.methods.associatePlayer(data, socket.id)
+            if (!game.players[socket.id]) {
+                return
+            }
+            let newRoom = game.players[socket.id].room
+            updatePlayerLocation(undefined, newRoom)
         }
 
         //When a player sends a command respond accordingly
@@ -32,6 +37,7 @@ module.exports = function (io, game) {
             if (command === 'attack') {
                 //If the player has the ability to attack right now
                 if (game.players[socket.id].canAttack()) {
+                    let previousRoom = game.players[socket.id].room
                     console.log('Player attacked')
                     socket.emit('command-response', {message: `${game.players[socket.id].name} attacks...`})
                     let enemy = game.players[socket.id].currentEnemy
@@ -48,6 +54,7 @@ module.exports = function (io, game) {
                             delete game.enemies[enemyIndex]
                                                     
                         } else {
+                            updatePlayerLocation(previousRoom, game.players[socket.id].room)
                             socket.emit('command-response', {message: `${game.players[socket.id].name} defeated ${enemy.name}`})
                             io.to(enemy.reference).emit('command-response', {message: `${game.players[socket.id].name} hits for ${game.players[socket.id].attackDamage}`})
                             io.to(enemy.reference).emit('command-response', {message:  `The stress is too much! ${enemy.name} fainted.`})
@@ -61,12 +68,14 @@ module.exports = function (io, game) {
                             console.log('Enemy is alive and will attack')
                             //Set a timer so it will attack after 2 seconds
                             if (!enemy.level) {
-                                if (!game.players[socket.id].currentEnemy.attackCommand()) {
+                                if (!enemy.attackCommand()) {
+                                    updatePlayerLocation(previousRoom, game.players[socket.id].room)
                                     socket.emit('command-response', {message: `${enemy.name} hits for ${enemy.attackDamage}`})
                                     socket.emit('command-response', {message:  `The stress is too much! ${game.players[socket.id].name} fainted.`})
                                     socket.emit('command-response', {message:  `${game.players[socket.id].name} wakes up energized and ready to try again!`, level: game.players[socket.id].room})
                                 } else {
-                                    socket.emit('command-response', {message: `${game.players[socket.id].currentEnemy.name} hits for ${game.players[socket.id].currentEnemy.attackDamage}`})
+                                    console.log(enemy)
+                                    socket.emit('command-response', {message: `${enemy.name} hits for ${enemy.attackDamage}`})
                                 }
                             }
                             
@@ -163,22 +172,14 @@ module.exports = function (io, game) {
 
             if (command === 'move') {
                 //Execute the command for the player
+                let previousRoom = game.players[socket.id].room
                 game.players[socket.id].move(modifier)
-                let playerLocations = {}
-                for(let key in game.players) {
-                    let player = game.players[key]
-                    if (!playerLocations[player.room]) {
-                        playerLocations[player.room] = [] 
-                    }
-                    playerLocations[player.room].push(player.name)
-                }
-                for(let key in game.players) {
-                    io.to(key).emit('player-positions', { locations: playerLocations, playerName: game.players[key].name })
-                }
+                let newRoom = game.players[socket.id].room
+                updatePlayerLocation(previousRoom, newRoom)
                 if (modifier === 'vending machine') {
                     modifier = 'vending-machine'
                 }
-                socket.emit('command-response', {message: `${game.players[socket.id].name} has moved to ${modifier}!`, level: `${modifier}`})
+                socket.emit('command-response', {message: `${game.players[socket.id].name} has moved to ${game.players[socket.id].room}!`, level: `${game.players[socket.id].room}`})
                 //If the player moves to the class create an enemy for that player
                 if (modifier === 'class') {
                     game.methods.createEnemy([game.players[socket.id]])
@@ -213,7 +214,26 @@ module.exports = function (io, game) {
 
         //Call the game obj method to remove a given player
         function removePlayer() {
+            let room = game.players[socket.id].room
+            updatePlayerLocation(room)
             game.methods.removePlayer(socket.id)
+        }
+
+        function updatePlayerLocation(previousRoom, newRoom) {
+            for(let key in game.players) {
+                if (key === socket.id) {
+                    continue
+                }
+                let player = game.players[key]
+                let messageName
+                if (player.room === newRoom) {
+                    messageName = 'player-joined'
+                } else if (player.room === previousRoom) {
+                    messageName = 'player-left'
+                }
+                io.to(player.reference).emit(messageName, game.players[socket.id].name)
+                socket.emit(messageName, player.name)
+            }
         }
     }
 }

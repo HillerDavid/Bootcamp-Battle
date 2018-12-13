@@ -1,10 +1,9 @@
 let socket = io.connect()
-let basher
-let activeUserObject
+let gitBashed
 
 socket.on('chat', incomingChat)
 socket.on('command-response', (response) => {
-    basher.echo(response.message)
+    gitBashed.echo(response.message)
     if (response.level) {
         let image = `/images/${response.level}.jpg`
         console.log(image)
@@ -12,7 +11,10 @@ socket.on('command-response', (response) => {
     }
 })
 
-socket.on('player-positions', displayActiveUsers)
+// socket.on('player-positions', displayActiveUsers)
+
+socket.on('player-joined', addPlayer)
+socket.on('player-left', removePlayer)
 
 
 $.post('/api/identify', {
@@ -24,9 +26,9 @@ $.post('/api/identify', {
 $('#terminal').terminal(function (cmd) {
     let userCommand = cmd
     socket.emit('command', userCommand)
-    basher = this
+    gitBashed = this
 }, {
-    greetings: 'Basher loaded...\r\nWelcome to Bootcamp Battle',
+    greetings: 'Git Bashed loaded...\r\nWelcome to Bootcamp Battle',
     prompt: '$ '
 })
 
@@ -83,45 +85,25 @@ $('#chat-message-area').on('keyup', function (event) {
 })
 
 function scrollDown() {
-    $('#message-screen').animate({scrollTop: $('#message-screen').prop("scrollHeight")}, 500);
+    $('#message-screen').animate({scrollTop: $('#message-screen').prop('scrollHeight')}, 500);
 }
 
-function displayActiveUsers(data) {
-    activeUserObject = data.locations
-    // Empty array or object should be defined that will populate and update as users enter and leave and area
-    // Everytime a user enters or leaves a specific area, this function should be called which displays all active users in the object/array
-    let room
-    let name = data.playerName
-    for(let key in activeUserObject) {
-        for(let i = 0; i < activeUserObject[key].length; i++) {
-            if (activeUserObject[key][i] === data.playerName) {
-                room = key
-                break
-            }
-        }
-        if (room) {
-            break
-        }
-    }
-    activeUserObject[room].forEach(function (elem) {
-        // console.log(elem)
-        if (elem === name) {
-            return
-        }
-        let userName = ' ' + elem
-        let localUsers = $('#direct-message-column')
-        let activeUser = $('<li>')
-        activeUser.addClass('nav-item')
-        let userLink = $('<a>')
-        userLink.addClass('nav-link')
-        userLink.css("color", "whitesmoke")
-        let online = $('<i>')
-        online.addClass('fa-sm fas fa-circle')
-        userLink.append(online, userName)
-        activeUser.append(userLink)
-        localUsers.append(activeUser)
-    })
+function addPlayer(data) {
+    let userName = ' ' + data
+    let localUsers = $('#direct-message-column')
+    let activeUser = $('<li>')
+    activeUser.addClass('nav-item')
+    activeUser.attr('id', data)
+    let userLink = $('<a>')
+    userLink.addClass('nav-link')
+    userLink.css('color', 'whitesmoke')
+    let online = $('<i>')
+    online.addClass('fa-sm fas fa-circle')
+    userLink.append(online, userName)
+    activeUser.append(userLink)
+    localUsers.append(activeUser)
 }
 
-// This function works if you un-comment the userName in the function and call it.
-// displayActiveUsers()
+function removePlayer(data) {
+    $(`#${data}`).remove()
+}
