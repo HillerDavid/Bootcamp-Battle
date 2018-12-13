@@ -11,8 +11,8 @@ let game = {
     enemies: {},
 
     items: {
-        'health potion': {
-            item_name: 'health potion',
+        'energy drink': {
+            item_name: 'energy drink',
             cost: 10,
             attack: 0,
             defense: 0,
@@ -21,8 +21,28 @@ let game = {
             equippable: false,
             usable: true
         },
-        'sword': {
-            item_name: 'sword',
+        'sports drink': {
+            item_name: 'sports drink',
+            cost: 10,
+            attack: 0,
+            defense: 0,
+            hp: 0,
+            mp: 10,
+            equippable: false,
+            usable: true
+        },
+        'coffee': {
+            item_name: 'coffee',
+            cost: 10,
+            attack: 0,
+            defense: 0,
+            hp: 5,
+            mp: 5,
+            equippable: false,
+            usable: true
+        },
+        'mechanical keyboard': {
+            item_name: 'mechanical keyboard',
             cost: 50,
             attack: 5,
             defense: 0,
@@ -31,8 +51,8 @@ let game = {
             equippable: true,
             usable: false
         },
-        'shield': {
-            item_name: 'shield',
+        'solid-state drive': {
+            item_name: 'solid-state drive',
             cost: 50,
             attack: 0,
             defense: 5,
@@ -96,7 +116,7 @@ let game = {
             //Create the reference where the enemy will be kept
             game.enemies[currentPlayer.reference] = {}
             //Create the enemy object and put it in it's location, giving it an array of players it is fighting
-            game.enemies[currentPlayer.reference] = new Enemy('assignment', (currentPlayer.level * 2) + 4, currentPlayer.level, (currentPlayer.level * 5) + 9, currentPlayer.level * 40, currentPlayer.reference, players)
+            game.enemies[currentPlayer.reference] = new Enemy('assignment', (currentPlayer.level * 2) + 4, currentPlayer.level, (currentPlayer.level * 5) + 9, currentPlayer.level * 40, Math.floor((Math.random() * 50) + 10), currentPlayer.reference, players)
             //Loop through the players
             for(let player of players) {
                 //If the player isn't currently fighting an enemy
