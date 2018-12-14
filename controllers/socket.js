@@ -39,12 +39,12 @@ module.exports = function (io, game) {
                 if (game.players[socket.id].canAttack()) {
                     let previousRoom = game.players[socket.id].room
                     console.log('Player attacked')
-                    socket.emit('command-response', {message: `${game.players[socket.id].name} attacks...`})
+                    socket.emit('command-response', {message: `${game.players[socket.id].name} attacks...`, alertType: 'secondary'})
                     let enemy = game.players[socket.id].currentEnemy
                     //The player attackCommand returns whether the enemy they are fighting is still alive or not
                     if (!game.players[socket.id].attackCommand()) {
                         console.log('Enemy is dead')
-                        socket.emit('command-response', {message: `You defeated ${enemy.name}`})
+                        socket.emit('command-response', {message: `You defeated ${enemy.name}`, alertType: 'success'})
                         if (game.players[socket.id].currentEnemy) {
                             //Get the reference to the enemy in the game object
                             let enemyIndex = game.players[socket.id].currentEnemy.reference
@@ -56,28 +56,29 @@ module.exports = function (io, game) {
                                                     
                         } else {
                             updatePlayerLocation(previousRoom, game.players[socket.id].room)
-                            socket.emit('command-response', {message: `${game.players[socket.id].name} defeated ${enemy.name}`})
-                            io.to(enemy.reference).emit('command-response', {message: `${game.players[socket.id].name} hits for ${game.players[socket.id].attackDamage}`})
+                            socket.emit('command-response', {message: `${game.players[socket.id].name} defeated ${enemy.name}`, alertType: 'success'})
+                            io.to(enemy.reference).emit('command-response', {message: `${game.players[socket.id].name} hits for ${game.players[socket.id].attackDamage}`, alertType: 'danger'})
                             io.to(enemy.reference).emit('command-response', {message:  `The stress is too much! ${enemy.name} fainted.`})
                             io.to(enemy.reference).emit('command-response', {message:  `${enemy.name} wakes up energized and ready to try again!`, level: enemy.room})
                         }
 
                         //If the enemy can attack
                     } else {
-                        socket.emit('command-response', {message: `${game.players[socket.id].name} hits for ${game.players[socket.id].attackDamage}`})
+                        socket.emit('command-response', {message: `${game.players[socket.id].name} hits for ${game.players[socket.id].attackDamage}`, alertType: 'secondary'})
                         if (game.players[socket.id].currentEnemy.canAttack()) {
                             console.log('Enemy is alive and will attack')
                             //Set a timer so it will attack after 2 seconds
                             if (!enemy.level) {
                                 if (!enemy.attackCommand()) {
                                     updatePlayerLocation(previousRoom, game.players[socket.id].room)
-                                    socket.emit('command-response', {message: `${enemy.name} hits for ${enemy.attackDamage}`})
+                                    socket.emit('command-response', {message: `${enemy.name} hits for ${enemy.attackDamage}`, alertType: 'danger'})
                                     socket.emit('command-response', {message:  `The stress is too much! ${game.players[socket.id].name} fainted.`})
                                     socket.emit('command-response', {message:  `${game.players[socket.id].name} wakes up energized and ready to try again!`, level: game.players[socket.id].room})
                                 } else {
-                                    console.log(enemy)
-                                    socket.emit('command-response', {message: `${enemy.name} hits for ${enemy.attackDamage}`})
+                                    socket.emit('command-response', {message: `${enemy.name} hits for ${enemy.attackDamage}`, alertType: 'danger'})
                                 }
+                            } else {
+                                io.to(enemy.reference).emit('command-response', {message: `${game.players[socket.id].name} hits for ${game.players[socket.id].attackDamage}`, alertType: 'secondary'})
                             }
                             
                         } else {
@@ -118,6 +119,7 @@ module.exports = function (io, game) {
                         game.players[socket.id].currency -= game.items[item].cost * quantity
                         //Give the player their items and save them in the database
                         game.methods.giveItem(game.players[socket.id], game.items[item], quantity, true)
+                        console.log(`Item ${item} purchased`)
                     }
                 }
                 return
@@ -186,7 +188,7 @@ module.exports = function (io, game) {
                 if (modifier === 'class') {
                     game.methods.createEnemy([game.players[socket.id]])
                     if (game.enemies[socket.id]) {
-                        socket.emit('command-response', {message: `${game.players[socket.id].name} has been given a(n) ${game.enemies[socket.id].name}!`})
+                        socket.emit('command-response', {message: `${game.players[socket.id].name} has been given a(n) ${game.enemies[socket.id].name}!`, alertType:'danger'})
                     }
                 }
                 return
@@ -208,6 +210,31 @@ module.exports = function (io, game) {
                 }
                 console.log(`${game.players[socket.id].name} is unable to sleep`)
                 return
+            }
+
+            if (command === 'use') {
+                for(let i = 0; i < game.players[socket.id].inventory.length; i++) {
+                    let item = game.players[socket.id].inventory[i]
+                    if (item.item_name === modifier) {
+                        console.log('Item found')
+                        if (item.usable) {
+                            if (!item.use()) {
+                                game.players[socket.id].inventory.splice(i, 1)
+                            }
+                            for(let key in item) {
+                                if (game.players[socket.id][key]) {
+                                    if (game.players[socket.id][key] + item[key] > 0) {
+                                        game.players[socket.id][key] += item[key]
+                                    } else {
+                                        game.players[socket.id][key] = 0
+                                    }  
+                                }
+                            }
+                        }
+                        return
+                    }
+                }
+                console.log(`Item ${modifier} not found`)
             }
 
         }

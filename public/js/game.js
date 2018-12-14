@@ -3,7 +3,21 @@ let gitBashed
 
 socket.on('chat', incomingChat)
 socket.on('command-response', (response) => {
-    gitBashed.echo(response.message)
+    let color
+    switch (response.alertType) {
+    case 'danger':
+        color = '#f00'
+        break
+    case 'secondary':
+        color = '#fff'
+        break
+    case 'success':
+        color = 'ff0'
+        break
+    default:
+        color = ''
+    }
+    gitBashed.echo(`[[;${color};]${response.message}]`)
     if (response.level) {
         let image = `/images/${response.level}.jpg`
         console.log(image)

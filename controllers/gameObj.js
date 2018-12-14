@@ -16,7 +16,7 @@ let game = {
             cost: 10,
             attack: 0,
             defense: 0,
-            hp: 10,
+            hp: -10,
             mp: 0,
             equippable: false,
             usable: true
