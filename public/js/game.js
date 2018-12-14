@@ -11,8 +11,6 @@ socket.on('command-response', (response) => {
     }
 })
 
-// socket.on('player-positions', displayActiveUsers)
-
 socket.on('player-joined', addPlayer)
 socket.on('player-left', removePlayer)
 
@@ -50,7 +48,7 @@ function incomingChat(data) {
     let messageText = $('<p>')
     messageText.text(incomingMessage)
     chatDiv.append(avatar, playerName, messageText)
-    $('#chat').append(chatDiv)
+    $('#message-screen').append(chatDiv)
     scrollDown()
 }
 

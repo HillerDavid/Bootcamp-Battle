@@ -104,6 +104,10 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         this.currentEnemy = undefined
         this.room = 'home'
         this.hp = 0
-        this.currency -= this.level * 20
+        if (this.currency > this.level * 20) {
+            this.currency -= this.level * 20
+        } else {
+            this.currency = 0
+        }
     }
 }

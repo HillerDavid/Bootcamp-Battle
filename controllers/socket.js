@@ -44,6 +44,7 @@ module.exports = function (io, game) {
                     //The player attackCommand returns whether the enemy they are fighting is still alive or not
                     if (!game.players[socket.id].attackCommand()) {
                         console.log('Enemy is dead')
+                        socket.emit('command-response', {message: `You defeated ${enemy.name}`})
                         if (game.players[socket.id].currentEnemy) {
                             //Get the reference to the enemy in the game object
                             let enemyIndex = game.players[socket.id].currentEnemy.reference
@@ -87,6 +88,7 @@ module.exports = function (io, game) {
                 } else {
                     //The player has already attacked and it is not their turn again yet
                     console.log(`${game.players[socket.id].name} cannot attack yet`)
+                    socket.emit('command-response', {message: `${game.players[socket.id].name} cannot attack yet`})
                 }
                 return
             }
@@ -125,7 +127,7 @@ module.exports = function (io, game) {
                 if (game.players[socket.id].room === 'panera') {
                     for(let key in game.players) {
                         let player = game.players[key]
-                        if (player.name === modifier) {
+                        if (player.name.toLowerCase() === modifier) {
                             console.log('Player found')
                             if (player.room === 'panera') {
                                 io.to(player.reference).emit('command-response', {message: `${game.players[socket.id].name} challenged you`})
@@ -146,7 +148,7 @@ module.exports = function (io, game) {
             if (command === 'accept') {
                 for(let i = 0; i < game.players[socket.id].challenges.length; i++) {
                     let player = game.players[game.players[socket.id].challenges[i]]
-                    if (player.name === modifier) {
+                    if (player.name.toLowerCase() === modifier) {
                         game.players[socket.id].currentEnemy = player
                         player.currentEnemy = game.players[socket.id]
                         game.players[socket.id].challenges.splice(i, 1)
@@ -183,6 +185,9 @@ module.exports = function (io, game) {
                 //If the player moves to the class create an enemy for that player
                 if (modifier === 'class') {
                     game.methods.createEnemy([game.players[socket.id]])
+                    if (game.enemies[socket.id]) {
+                        socket.emit('command-response', {message: `${game.players[socket.id].name} has been given a(n) ${game.enemies[socket.id].name}!`})
+                    }
                 }
                 return
             }
@@ -210,6 +215,7 @@ module.exports = function (io, game) {
         //When chat is recieved send out a message to everyone else, attatching the player name
         function updateChat(data) {
             socket.broadcast.emit('chat', { user: game.players[socket.id].name, message: data })
+            console.log(data)
         }
 
         //Call the game obj method to remove a given player
