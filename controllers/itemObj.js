@@ -10,14 +10,24 @@ module.exports = function Item(item_name, attack, defense, hp, mp, equippable, u
 
     this.equip = function() {
         if (this.equippable) {
-            this.equipped = true
+            if (!this.equipped) {
+                this.equipped = true
+                return false
+            }
+            return `${this.item_name} is already equipped`
         }
+        return `${this.item_name} is not equippable`
     }
 
     this.unequip = function() {
         if (this.equippable) {
-            this.equipped = false
+            if (this.equipped) {
+                this.equipped = false
+                return false
+            }
+            return `${this.item_name} is not equipped`
         }
+        return `${this.item_name} is not equippable`
     }
 
     this.use = function(player) {

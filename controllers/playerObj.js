@@ -60,7 +60,16 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
                 }
             }
             //Do damage to the enemy corresponding to the attack
-            let damage = ((Math.floor(Math.random() * 6) + 1) + this.attack + equipmentModifier + this.level) - this.currentEnemy.defense
+            let enemyModifier = 0;
+            if (this.currentEnemy.inventory) {
+                for(let i = 0; i < this.currentEnemy.inventory.length; i++) {
+                    let item = this.currentEnemy.inventory[i]
+                    if (item.equipped) {
+                        enemyModifier += item.effect.defense
+                    }
+                }
+            }
+            let damage = ((Math.floor(Math.random() * 6) + 1) + this.attack + equipmentModifier + this.level) - (this.currentEnemy.defense + enemyModifier)
             if (damage < 1) {
                 damage = 0
             }
@@ -164,6 +173,22 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         this.socket.emit('command-response', {message})
     }
 
+    this.equipCommand = function(modifier) {
+        for (let i = 0; i < this.inventory.length; i++) {
+            let item = this.inventory[i]
+            if (item.item_name === modifier) {
+                let equipResponse = item.equip()
+                if (!equipResponse) {
+                    this.socket.emit('command-response', {message: `${this.name} equipped ${item.item_name}`})
+                } else {
+                    this.socket.emit('command-response', {message: equipResponse, alertType: 'danger'})
+                }
+                return
+            }
+        }
+        this.socket.emit('command-response', {message: `${this.name} does not have an item called ${modifier}`, alertType: 'danger'})
+    }
+
     this.faint = function() {
         this.currentEnemy = undefined
         this.room = 'home'
@@ -199,10 +224,10 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
 
     this.levelUp = function() {
         if (this.exp >= this.level * 200) {
+            this.exp -= this.level * 200
             this.level++
-            this.exp = 0
             this.attack++
-            this.defense + 2
+            this.defense += 2
         }
     }
 
@@ -256,6 +281,22 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
             return true
         }
         return false
+    }
+
+    this.unequipCommand = function(modifier) {
+        for (let i = 0; i < this.inventory.length; i++) {
+            let item = this.inventory[i]
+            if (item.item_name === modifier) {
+                let equipResponse = item.unequip()
+                if (!equipResponse) {
+                    this.socket.emit('command-response', {message: `${this.name} unequipped ${item.item_name}`})
+                } else {
+                    this.socket.emit('command-response', {message: equipResponse, alertType: 'danger'})
+                }
+                return
+            }
+        }
+        this.socket.emit('command-response', {message: `${this.name} does not have an item called ${modifier}`, alertType: 'danger'})
     }
 
     this.update = function() {

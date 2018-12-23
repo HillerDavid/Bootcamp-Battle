@@ -14,25 +14,38 @@ module.exports = function Enemy(name, attack, defense, hp, expValue, currencyVal
     this.attackCommand = function(){
         //Pick a random player being fought to target
         let targetIndex = Math.floor(Math.random() * this.players.length)
-        this.attackDamage = ((Math.floor(Math.random() * 6) + 1) + this.attack) - this.players[targetIndex].defense
+        let target = this.players[targetIndex]
+        let defenseModifier = 0
+        for(let i = 0; i < target.inventory.length; i++) {
+            let item = target.inventory[i]
+            if (item.equipped) {
+                defenseModifier += item.effect.defense
+            }
+        }
+        this.attackDamage = ((Math.floor(Math.random() * 6) + 1) + this.attack) - (target.defense + defenseModifier)
         if (this.attackDamage < 1) {
             this.attackDamage = 0
         }
         //Do damage to that player
-        this.players[targetIndex].hp += this.attackDamage
-        console.log(`${this.players[targetIndex].name}'s hp: ${this.players[targetIndex].hp}`)
+        target.hp += this.attackDamage
+        console.log(`${target.name}'s hp: ${target.hp}`)
+
+        //Check if the attacked player is still alive
+        let alive = target.isAlive()
+
         //Loop through the players being fought and allow them to attack again
         for(let player of this.players) {
             player.socket.emit('command-response', {message: `${this.name} attacks...`, alertType: 'danger'})
-            player.socket.emit('command-response', {message: `${this.name} hits ${players[targetIndex].name} for ${this.attackDamage}`, alertType: 'danger'})
+            player.socket.emit('command-response', {message: `${this.name} hits ${target.name} for ${this.attackDamage}`, alertType: 'danger'})
             player.attacked = false
+            if (!player.hiddenNumber === target.hiddenNumber && !alive) {
+                player.socket.emit('command-response', {message: `${target.name} fainted`, alertType: 'danger'})
+            }
         }
-        //Check if the attacked player is still alive
-        if(!this.players[targetIndex].isAlive()) {
-            this.players[targetIndex].faint()
-            return false
+        
+        if(!alive) {
+            this.players.splice(targetIndex, 1)
         }
-        return true
     }
 
     //This method returns if the player can attack or not

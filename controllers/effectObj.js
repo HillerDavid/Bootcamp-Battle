@@ -11,13 +11,11 @@ module.exports = function effect(name, attack, defense, hp, mp, turns, pulse) {
     this.update = function(target) {
         this.turns--
         if (this.first || this.pulse) {
-            console.log(target.hp)
             this.first = false
             target.attack += attack
             target.defense += defense
             target.hp += hp
             target.mp += mp
-            console.log(target.hp)
         }
         this.checkTurns(target)
     }
