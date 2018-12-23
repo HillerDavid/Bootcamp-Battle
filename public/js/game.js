@@ -1,6 +1,7 @@
 let socket = io.connect()
 let gitBashed
 
+socket.on('identify', identify)
 socket.on('chat', incomingChat)
 socket.on('command-response', (response) => {
     let color
@@ -19,6 +20,9 @@ socket.on('command-response', (response) => {
     }
     gitBashed.echo(`[[;${color};]${response.message}]`)
     if (response.level) {
+        if (response.level.indexOf(' ') >= 0) {
+            response.level = response.level.split(' ').join('-')
+        }
         let image = `/images/${response.level}.jpg`
         console.log(image)
         $('#game-background').attr('src', image)
@@ -28,12 +32,17 @@ socket.on('command-response', (response) => {
 socket.on('player-joined', addPlayer)
 socket.on('player-left', removePlayer)
 
+function identify() {
+    $.post('/api/identify', {
+        number: localStorage.number
+    }).then(function (data) {
+        socket.emit('identifier', localStorage.number)
+    }).fail(function (data) {
+        window.location.replace(data.responseText)
+    })
+}
 
-$.post('/api/identify', {
-    number: localStorage.number
-}).then(function () {
-    socket.emit('identifier', localStorage.number)
-})
+identify()
 
 $('#terminal').terminal(function (cmd) {
     let userCommand = cmd

@@ -1,9 +1,8 @@
+let Effect = require('./effectObj')
+
 module.exports = function Item(item_name, attack, defense, hp, mp, equippable, usable, equipped) {
     this.item_name = item_name
-    this.attack = attack
-    this.defense = defense
-    this.hp = hp
-    this.mp = mp
+    this.effect = new Effect('Item', attack, defense, hp, mp, 0, false)
     this.equippable = equippable
     this.usable = usable
     this.equipped = equipped
@@ -21,9 +20,22 @@ module.exports = function Item(item_name, attack, defense, hp, mp, equippable, u
         }
     }
 
-    this.use = function() {
+    this.use = function(player) {
         if (this.usable) {
             this.quantity--
+            let found = false
+            for(let key of player.effects) {
+                if (key === this.effect.name) {
+                    player.effects[key].turns += this.effect.turns
+                    console.log('Added to effect turns')
+                    found = true
+                    break
+                }
+            }
+            if (!found) {
+                console.log('Added effect')
+                player.effects.push(new Effect(this.effect.name, this.effect.attack, this.effect.defense, this.effect.hp, this.effect.mp, this.effect.turns, this.effect.pulse))
+            }
             if (this.quantity > 0) {
                 return true
             }
