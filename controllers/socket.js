@@ -5,6 +5,7 @@ module.exports = function (io, game) {
     //Function that runs when someone connects
     function newConnection(socket) {
         console.log(`New connection: ${socket.id}.`)
+        let timer = setTimeout(askForIdentification, 500)
         //Set up an event for when a player identifies itself
         socket.on('identifier', identifyPlayer)
 
@@ -17,22 +18,33 @@ module.exports = function (io, game) {
         //Set up an event for when a player disconnects
         socket.on('disconnect', removePlayer)
 
+        function askForIdentification() {
+            console.log('ID not recieved')
+            socket.emit('identify', 'Please make ajax request')
+        }
+
         //When a player identifies themselves you connect the player obj to the socket connection
         function identifyPlayer(data) {
+            clearTimeout(timer)
             game.methods.associatePlayer(data, socket.id)
             if (!game.players[socket.id]) {
                 return
             }
+            game.players[socket.id].socket = socket
             let newRoom = game.players[socket.id].room
             updatePlayerLocation(undefined, newRoom)
         }
 
         //When a player sends a command respond accordingly
         function parseCommand(data) {
+            if (!game.players[socket.id]) {
+                return
+            }
             //Make the whole string lowercase and split the command into the command and modifier
             let string = data.toLowerCase()
             let command = string.split(' ')[0]
             let modifier = string.split(' ').slice(1).join(' ')
+<<<<<<< HEAD
 
             if (command === 'attack') {
                 //If the player has the ability to attack right now
@@ -172,48 +184,33 @@ module.exports = function (io, game) {
 
             if (command === 'move') {
                 //Execute the command for the player
+=======
+            if (game.players[socket.id][`${command}Command`]) {
+>>>>>>> 199ef647b9d90e4bab8a2ec8b037119232dbd2c4
                 let previousRoom = game.players[socket.id].room
-                game.players[socket.id].move(modifier)
-                let newRoom = game.players[socket.id].room
-                updatePlayerLocation(previousRoom, newRoom)
-                if (modifier === 'vending machine') {
-                    modifier = 'vending-machine'
+                game.players[socket.id][`${command}Command`](modifier)
+                if (command === 'move') {
+                    updatePlayerLocation(previousRoom, game.players[socket.id].room)
                 }
-                socket.emit('command-response', {message: `${game.players[socket.id].name} has moved to ${game.players[socket.id].room}!`, level: `${game.players[socket.id].room}`})
-                //If the player moves to the class create an enemy for that player
-                if (modifier === 'class') {
-                    game.methods.createEnemy([game.players[socket.id]])
-                }
-                return
-            }
-
-            if (command === 'save') {
-                //Save the whole game
-                game.methods.saveState()
-                socket.emit('command-response', {message: `${game.players[socket.id].name} game is saved!`})
-                return
-            }
-
-            if (command === 'sleep') {
-                //If the player can sleep, they sleep
-                if (game.players[socket.id].sleep()) {
-                    console.log(`${game.players[socket.id].name} slept and is back to 0 stress(hp)`)
-                    socket.emit('command-response', {message:`${game.players[socket.id].name} slept and is back to 0 stress(hp).`})
-                    return
-                }
-                console.log(`${game.players[socket.id].name} is unable to sleep`)
-                return
-            }
-
+            } else {
+                socket.emit('command-response', { message: 'Invalid command' })
+            } 
         }
 
         //When chat is recieved send out a message to everyone else, attatching the player name
         function updateChat(data) {
+            if (!game.player[socket.id]) {
+                return
+            }
             socket.broadcast.emit('chat', { user: game.players[socket.id].name, message: data })
+            console.log(data)
         }
 
         //Call the game obj method to remove a given player
         function removePlayer() {
+            if (!game.players[socket.id]) {
+                return
+            }
             let room = game.players[socket.id].room
             updatePlayerLocation(room)
             game.methods.removePlayer(socket.id)
@@ -224,15 +221,15 @@ module.exports = function (io, game) {
                 if (key === socket.id) {
                     continue
                 }
-                let player = game.players[key]
+                let otherPlayer = game.players[key]
                 let messageName
-                if (player.room === newRoom) {
+                if (otherPlayer.room === newRoom) {
                     messageName = 'player-joined'
-                } else if (player.room === previousRoom) {
+                } else if (otherPlayer.room === previousRoom) {
                     messageName = 'player-left'
                 }
-                io.to(player.reference).emit(messageName, game.players[socket.id].name)
-                socket.emit(messageName, player.name)
+                io.to(otherPlayer.socket.id).emit(messageName, game.players[socket.id].name)
+                socket.emit(messageName, otherPlayer.name)
             }
         }
     }

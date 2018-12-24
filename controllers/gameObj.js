@@ -1,8 +1,3 @@
-let Player = require('./playerObj')
-let Enemy = require('./enemyObj')
-let Item = require('./itemObj')
-let db = require('../models')
-
 let game = {
     //This is the list of players in object form for easier manipulation
     players: {},
@@ -10,13 +5,14 @@ let game = {
     //This is the list of enemies in object form for easier manipulation
     enemies: {},
 
+    //This is the list of items in object form for easier manipulations
     items: {
         'energy drink': {
             item_name: 'energy drink',
             cost: 10,
             attack: 0,
             defense: 0,
-            hp: 10,
+            hp: -10,
             mp: 0,
             equippable: false,
             usable: true
@@ -36,7 +32,9 @@ let game = {
             cost: 10,
             attack: 0,
             defense: 0,
-            hp: 5,
+
+            hp: -5,
+
             mp: 5,
             equippable: false,
             usable: true
@@ -74,6 +72,8 @@ let game = {
                 data.defense, data.hp, data.mp, data.currency, data.homework_completed,
                 data.exp, data.level)
 
+            console.log('Player added')
+
             game.players[tempKey].hiddenNumber = tempKey
 
             //Loop through all of the items in the database belonging to the player and add them to the player's inventory
@@ -104,8 +104,6 @@ let game = {
                 delete game.players[key]
                 //Store the object at it's new location: the player's soccket connection id
                 game.players[socketId] = temp
-                //Set reference in the player object to the socket id in case it's needed
-                game.players[socketId].reference = socketId
                 console.log('Player associated!!!')
             }
         },
@@ -113,16 +111,19 @@ let game = {
         //Create an enemy object in the game enemy object list and associate it with a player
         createEnemy: function(players) {
             let currentPlayer = players[0]
+            let id = currentPlayer.socket.id
             //Create the reference where the enemy will be kept
-            game.enemies[currentPlayer.reference] = {}
+            game.enemies[id] = {}
             //Create the enemy object and put it in it's location, giving it an array of players it is fighting
-            game.enemies[currentPlayer.reference] = new Enemy('assignment', (currentPlayer.level * 2) + 4, currentPlayer.level, (currentPlayer.level * 5) + 9, currentPlayer.level * 40, Math.floor((Math.random() * 50) + 10), currentPlayer.reference, players)
+
+            game.enemies[id] = new Enemy('assignment', (currentPlayer.level * 2) + 4, currentPlayer.level, (currentPlayer.level * 5) + 9, currentPlayer.level * 40, currentPlayer.level * 40, id, players)
+
             //Loop through the players
             for(let player of players) {
                 //If the player isn't currently fighting an enemy
                 if (!player.currentEnemy) {
                     //Set the player's currentEnemy to this one
-                    player.currentEnemy = game.enemies[currentPlayer.reference]
+                    player.currentEnemy = game.enemies[id]
                 }
             }
         },
@@ -140,7 +141,7 @@ let game = {
                             game.methods.saveItem(player, playerItem)
                         }
                     }
-                    console.log(player.inventory)
+                    // console.log(player.inventory)
                     return
                 }
             }
@@ -194,10 +195,10 @@ let game = {
         saveItem: function(player, item) {
             db.Item.create({
                 item_name: item.item_name,
-                attack: item.attack,
-                defense: item.defense,
-                hp: item.hp,
-                mp: item.mp,
+                attack: item.effect.attack,
+                defense: item.effect.defense,
+                hp: item.effect.hp,
+                mp: item.effect.mp,
                 equippable: item.equippable,
                 usable: item.usable,
                 equipped: item.equipped,
@@ -235,3 +236,8 @@ let game = {
 }
 
 module.exports = game
+
+let Player = require('./playerObj')
+let Enemy = require('./enemyObj')
+let Item = require('./itemObj')
+let db = require('../models')
