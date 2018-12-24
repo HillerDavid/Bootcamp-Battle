@@ -50,7 +50,7 @@ function incomingChat(data) {
     let messageText = $('<p>')
     messageText.text(incomingMessage)
     chatDiv.append(avatar, playerName, messageText)
-    $('#chat').append(chatDiv)
+    $('#message-screen').append(chatDiv)
     scrollDown()
 }
 

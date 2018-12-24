@@ -39,7 +39,7 @@ module.exports = function (io, game) {
                 if (game.players[socket.id].canAttack()) {
                     let previousRoom = game.players[socket.id].room
                     console.log('Player attacked')
-                    socket.emit('command-response', {message: `${game.players[socket.id].name} attacks...`})
+                    socket.emit('command-response', {message: `[[b;blue;]${game.players[socket.id].name} attacks...]`})
                     let enemy = game.players[socket.id].currentEnemy
                     //The player attackCommand returns whether the enemy they are fighting is still alive or not
                     if (!game.players[socket.id].attackCommand()) {
