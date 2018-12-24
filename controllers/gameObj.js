@@ -32,7 +32,9 @@ let game = {
             cost: 10,
             attack: 0,
             defense: 0,
+
             hp: -5,
+
             mp: 5,
             equippable: false,
             usable: true
@@ -113,7 +115,9 @@ let game = {
             //Create the reference where the enemy will be kept
             game.enemies[id] = {}
             //Create the enemy object and put it in it's location, giving it an array of players it is fighting
+
             game.enemies[id] = new Enemy('assignment', (currentPlayer.level * 2) + 4, currentPlayer.level, (currentPlayer.level * 5) + 9, currentPlayer.level * 40, currentPlayer.level * 40, id, players)
+
             //Loop through the players
             for(let player of players) {
                 //If the player isn't currently fighting an enemy

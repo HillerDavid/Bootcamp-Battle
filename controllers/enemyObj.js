@@ -1,4 +1,6 @@
+
 module.exports = function Enemy(name, attack, defense, hp, expValue, currencyValue, reference, players){
+
     this.name = name
     this.attack = attack
     this.defense = defense
@@ -6,6 +8,7 @@ module.exports = function Enemy(name, attack, defense, hp, expValue, currencyVal
     this.hp = 0
     this.expValue = expValue
     this.currencyValue = currencyValue
+
     this.reference = reference
     this.players = players
     this.attackDamage
@@ -80,16 +83,20 @@ module.exports = function Enemy(name, attack, defense, hp, expValue, currencyVal
     //Give the players their reward and remove their reference to the enemy
     this.payout = function() {
         //Calculate how much experience each player gets
+
         let individualExp = Math.floor(this.expValue / this.players.length)
         let individualCurrency = Math.floor(this.currencyValue / this.players.length)
+
         //Loop through the players
         for(let player of this.players) {
             //Give the player it's portion of the experience
             player.exp += individualExp
 
+
             player.currency += individualCurrency
 
             player.socket.emit('command-response', {message: `${player.name} recieved ${individualExp} exp and ${individualCurrency} nerd cred!`, alertType: 'success'})
+
             //Reset their ability to attack
             player.attacked = false
             //Remove the reference to the enemy
