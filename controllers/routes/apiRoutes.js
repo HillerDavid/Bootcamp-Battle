@@ -34,9 +34,21 @@ module.exports = function(app, game) {
         }
         db.Player.findOne({where:{email:req.user.email}, include: [db.Item]}).then(function(data) {
             if (data) {
+                for(let key in game.players) {
+                    let player = game.players[key]
+                    if (player.player_id === req.user.id) {
+                        res.status(400)
+                        res.send('/')
+                        return
+                    }
+                }
                 game.methods.addPlayer(req.body.number, data)
+                res.status(200)
+                res.send()
+            } else {
+                res.status(500)
+                res.send('/')
             }
-            res.end()
         })
     })
 }
