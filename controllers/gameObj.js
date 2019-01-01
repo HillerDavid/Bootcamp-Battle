@@ -154,9 +154,6 @@ let game = {
             if (shouldSave) {
                 game.methods.saveItem(player, player.inventory[player.inventory.length - 1])
             }
-
-            //If the item didn't previously exist in their inventory the loop didn't add them, so call the method again to add the rest
-            game.methods.giveItem(player, item, quantity - 1, shouldSave)
         },
 
         //Removes a certain quantity of an item from the database

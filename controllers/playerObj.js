@@ -117,7 +117,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
 
         if (this.currency >= quantity * item.cost) {
             this.currency -= quantity * item.cost
-            game.methods.giveItem(this, item, quantity)
+            game.methods.giveItem(this, item, quantity, true)
             this.socket.emit('command-response', {message: `${this.name} bought ${quantity} ${itemName}`, alertType: 'success'})
             return
         }
@@ -169,6 +169,14 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
                 message += `${key}: ${this[key]}\n`
             }
         }
+        message += 'inventory: ['
+        for(let i = 0; i < this.inventory.length; i++) {
+            if (i === 0) {
+                message += '\n'
+            }
+            message += `  ${this.inventory[i].item_name}: ${this.inventory[i].quantity}\n`
+        }
+        message += ']'
         message = message.trim()
         this.socket.emit('command-response', {message})
     }
@@ -335,7 +343,9 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
             if (item.item_name === modifier) {
                 if (item.usable) {
                     console.log('item is usable')
+                    game.methods.removeItem(this, item, 1)
                     if (!item.use(this)) {
+                        game.methods.removeItem(this, item, 99)
                         this.inventory.splice(i, 1)
                     }
                     this.update()
