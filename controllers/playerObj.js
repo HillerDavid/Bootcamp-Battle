@@ -52,6 +52,9 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         //Check if the player can attack
         if (this.canAttack()) {
             this.update()
+            if (!this.isAlive()) {
+                return
+            }
             this.socket.emit('command-response', {message: `${this.name} attacks...`, alertType: 'secondary'})
             let equipmentModifier = 0
             for(let i = 0; i < this.inventory.length; i++) {
@@ -132,6 +135,25 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
             return true
         }
         return false
+    }
+
+    this.castCommand = function(modifier) {
+        if (this.canAttack()) {
+            this.update()
+            if (!this.isAlive()) {
+                return
+            }
+            if (modifier === 'jquery') {
+                this.currentEnemy.effects.push(new Effect('Jquery', 0, 0, 10, 0, 0, false))
+            }
+            this.socket.emit('command-response', {message: `${this.name} casts ${modifier}...`, alertType: 'secondary'})
+            this.attacked = true
+            if (this.currentEnemy.level) {
+                this.currentEnemy.attacked = false
+                this.currentEnemy.socket.emit('command-response', {message: `${this.name} casts ${modifier}...`, alertType: 'danger'})
+            }
+            
+        }
     }
 
     this.challengeCommand = function(modifier) {
@@ -226,6 +248,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
                 this.hp = 0
                 this.attacked = false
                 this.currentEnemy = undefined
+                this.effects = []
             }
         }
         return alive
@@ -283,6 +306,14 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         return string
     }
 
+    this.relayEffect = function(descriptor, value, effectName, isGood) {
+        let message = `${this.name} is ${descriptor} ${value} by ${effectName}`
+        this.socket.emit('command-response', {message, alertType: isGood ? 'secondary' : 'danger'})
+        if (this.currentEnemy && this.currentEnemy.level) {
+            this.currentEnemy.socket.emit('command-response', { message, alertType: isGood ? 'danger' : 'secondary'})
+        } 
+    }
+
     //Heal the user if they are able to sleep
     this.sleepCommand = function() {
         if (this.room === 'home') {
@@ -313,24 +344,24 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         for(let i = 0; i < this.effects.length; i++) {
             let effect = this.effects[i]
             if (effect.attack > 0) {
-                this.socket.emit('command-response', {message: `${this.name} is strengthened ${effect.attack} by ${effect.name}`, alertType: 'secondary'})
+                this.relayEffect('strengthened', effect.attack, effect.name, true)
             } else if (effect.attack < 0) {
-                this.socket.emit('command-response', {message: `${this.name} weakened ${effect.attack} by ${effect.name}`, alertType: 'danger'})
+                this.relayEffect('weakened', effect.attack, effect.name, false)
             }
             if (effect.defense > 0) {
-                this.socket.emit('command-response', {message: `${this.name} protected ${effect.defense} by ${effect.name}`, alertType: 'secondary'})
+                this.relayEffect('protected', effect.defense, effect.name, true)
             } else if (effect.defense < 0) {
-                this.socket.emit('command-response', {message: `${this.name} make vulnerable ${effect.defense} by ${effect.name}`, alertType: 'danger'})
+                this.relayEffect('made vulnerable', effect.defense, effect.name, true)
             }
             if (effect.hp < 0) {
-                this.socket.emit('command-response', {message: `${this.name} energized ${effect.hp} by ${effect.name}`, alertType: 'secondary'})
+                this.relayEffect('energized', effect.hp, effect.name, true)
             } else if (effect.hp > 0) {
-                this.socket.emit('command-response', {message: `${this.name} tired ${effect.hp} by ${effect.name}`, alertType: 'danger'})
+                this.relayEffect('made tired', effect.hp, effect.name, false)
             }
             if (effect.mp > 0) {
-                this.socket.emit('command-response', {message: `${this.name} excited ${effect.mp} by ${effect.name}`, alertType: 'secondary'})
+                this.relayEffect('excited', effect.mp, effect.name, true)
             } else if (effect.mp < 0) {
-                this.socket.emit('command-response', {message: `${this.name} discouraged ${effect.mp} by ${effect.name}`, alertType: 'danger'})
+                this.relayEffect('discouraged', effect.mp, effect.name, false)
             }
             effect.update(this)
         }
@@ -340,6 +371,10 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
     }
 
     this.useCommand = function(modifier) {
+        if (!(!this.currentEnemy || this.canAttack())) {
+            this.socket.emit('command-response', {message: `${this.name} cannot use an item right now`, alertType: 'danger'})
+            return
+        }
         for (let i = 0; i < this.inventory.length; i++) {
             let item = this.inventory[i]
             if (item.item_name === modifier) {
@@ -350,6 +385,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
                         game.methods.removeItem(this, item, 99)
                         this.inventory.splice(i, 1)
                     }
+                    
                     this.update()
                     return
                 }
@@ -362,3 +398,4 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
 }
 
 let game = require('./gameObj')
+let Effect = require('./effectObj')

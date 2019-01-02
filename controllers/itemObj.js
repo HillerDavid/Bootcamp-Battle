@@ -2,7 +2,7 @@ let Effect = require('./effectObj')
 
 module.exports = function Item(item_name, attack, defense, hp, mp, equippable, usable, equipped) {
     this.item_name = item_name
-    this.effect = new Effect('Item', attack, defense, hp, mp, 0, false)
+    this.effect = new Effect(this.item_name, attack, defense, hp, mp, 0, false)
     this.equippable = equippable
     this.usable = usable
     this.equipped = equipped

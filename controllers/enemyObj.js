@@ -12,6 +12,7 @@ module.exports = function Enemy(name, attack, defense, hp, expValue, currencyVal
     this.reference = reference
     this.players = players
     this.attackDamage
+    this.effects = []
 
     //This method is where the enemy actually fights back
     this.attackCommand = function(){
