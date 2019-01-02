@@ -187,6 +187,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
             if (item.item_name === modifier) {
                 let equipResponse = item.equip()
                 if (!equipResponse) {
+                    game.methods.updateItem(this, item)
                     this.socket.emit('command-response', {message: `${this.name} equipped ${item.item_name}`})
                 } else {
                     this.socket.emit('command-response', {message: equipResponse, alertType: 'danger'})
@@ -297,6 +298,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
             if (item.item_name === modifier) {
                 let equipResponse = item.unequip()
                 if (!equipResponse) {
+                    game.methods.updateItem(this, item)
                     this.socket.emit('command-response', {message: `${this.name} unequipped ${item.item_name}`})
                 } else {
                     this.socket.emit('command-response', {message: equipResponse, alertType: 'danger'})

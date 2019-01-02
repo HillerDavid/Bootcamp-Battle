@@ -149,6 +149,7 @@ let game = {
             //If the player didn't already have the item in their inventory add it
             player.inventory.push(new Item(item.item_name, item.attack, item.defense,
                 item.hp, item.mp, item.equippable, item.usable, false))
+            player.inventory[player.inventory.length - 1].equipped = item.equipped
 
             //Save the item if it should be saved
             if (shouldSave) {
@@ -228,6 +229,23 @@ let game = {
                 //Execute the callback when the save is done
                 }).then(cb)
             }
+        },
+
+        updateItem: function(player, item) {
+            db.Item.update({
+                attack: item.effect.attack,
+                defense: item.effect.defense,
+                hp: item.effect.hp,
+                mp: item.effect.mp,
+                equipped: item.equipped
+            }, {
+                where: {
+                    PlayerId: player.player_id,
+                    item_name: item.item_name
+                }
+            }).then(() => {
+                console.log('Item updated')
+            })
         }
     }
 }
