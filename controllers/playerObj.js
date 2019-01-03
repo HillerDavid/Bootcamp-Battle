@@ -357,6 +357,10 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
     this.sleepCommand = function() {
         if (this.room === 'home') {
             this.hp = 0
+            if (this.mp === 0) {
+                this.mp = 10
+            }
+            this.socket.emit('command-response', { message:  `${this.name} wakes up energized and ready!` })
             return true
         }
         return false
