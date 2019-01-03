@@ -218,14 +218,12 @@ let game = {
                     player.currentEnemy.currentEnemy = undefined
                 }
 
-                for(let i = 0; i < player.effects.length; i++) {
-                    player.effects[i].undoEffect(player)
-                }
+                player.removeEffects()
                 //Update the database with their info
                 db.Player.update({
                     attack: player.attack,
                     defense: player.defense,
-                    hp: player.hp,
+                    hp: 0,
                     mp: player.mp,
                     currency: player.currency,
                     homework_completed: player.homework_completed,

@@ -60,7 +60,7 @@ module.exports = function Enemy(name, attack, defense, hp, expValue, currencyVal
         //Loop through the players
         for(let player of this.players) {
             //If one of the players fighting hasn't attacked yet wait until they have ALL attacked
-            if (player.canAttack()) {
+            if (player.canAttack(false)) {
                 console.log(`${player.name} has not attacked`)
                 return false
             }
@@ -107,6 +107,7 @@ module.exports = function Enemy(name, attack, defense, hp, expValue, currencyVal
             player.currentEnemy = false
             
             player.levelUp()
+            player.removeEffects()
         }
     }
 
