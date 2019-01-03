@@ -164,7 +164,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
             } else if (modifier === 'do nothing') {
                 
             } else {
-                this.socket.emit('command-response', { message: `${modifier} is not a spell.`, alertType: 'denger' })
+                this.socket.emit('command-response', { message: `${modifier} is not a spell.`, alertType: 'danger' })
                 return
             }
             this.socket.emit('command-response', { message: `${this.name} casts ${modifier}...`, alertType: 'secondary' })
