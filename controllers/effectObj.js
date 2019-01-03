@@ -21,12 +21,10 @@ module.exports = function effect(name, attack, defense, hp, mp, turns, pulse) {
     }
 
     this.checkTurns = function(target) {
+        console.log(`Turns left ${this.turns}`)
         if (this.turns < 1) {
             if (this.turns === 0) {
-                target.attack -= attack
-                target.defense -= defense
-                target.hp -= hp
-                target.mp -= mp
+                this.undoEffect(target)
             }
             for(let i = 0; i < target.effects.length; i++) {
                 if (target.effects[i].name === this.name) {
@@ -34,6 +32,20 @@ module.exports = function effect(name, attack, defense, hp, mp, turns, pulse) {
                     target.effects.splice(i, 1)
                     return
                 }
+            }
+        }
+    }
+
+    this.undoEffect = function(target) {
+        console.log('Effects being undone')
+        target.attack -= attack
+        target.defense -= defense
+        target.hp -= hp
+        target.mp -= mp
+        if (target.level) {
+            target.socket.emit('command-response', { message: `The effect of ${this.name} has worn off.`, alertType: 'danger' })
+            if (target.currentEnemy && target.currentEnemy.level) {
+                target.currentEnemy.socket.emit('command-response', { message: `The effect of ${this.name} has worn off for ${target.name}.`, alertType: 'secondary' })
             }
         }
     }

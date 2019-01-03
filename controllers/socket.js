@@ -47,7 +47,7 @@ module.exports = function (io, game) {
             if (game.players[socket.id][`${command}Command`]) {
                 let previousRoom = game.players[socket.id].room
                 game.players[socket.id][`${command}Command`](modifier)
-                if (command === 'move') {
+                if (command === 'move' && previousRoom !== game.players[socket.id].room) {
                     updatePlayerLocation(previousRoom, game.players[socket.id].room)
                 }
             } else {
