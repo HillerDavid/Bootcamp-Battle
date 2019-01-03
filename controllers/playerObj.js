@@ -348,7 +348,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
 
     this.removeEffects = function() {
         for (let i = 0; i < this.effects.length; i++) {
-            this.effect.undoEffect(this)
+            this.effects[i].undoEffect(this)
         }
         this.effects = []
     }
@@ -357,7 +357,19 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
     this.sleepCommand = function() {
         if (this.room === 'home') {
             this.hp = 0
+            if (this.mp === 0) {
+                this.mp = 10
+            }
+            this.socket.emit('command-response', { message:  `${this.name} wakes up energized and ready!` })
             return true
+        } else {
+            if (this.room === 'class') {
+                this.socket.emit('command-response', { message: `Dan doesn't like it when you sleep during class.`, alertType: 'danger' })
+            } else if (this.room === 'panera') {
+                this.socket.emit('command-response', { message: 'One of the Panera employees suggests sleeping at home.', alertType: 'danger' })
+            } else if (this.room === 'vending machine') {
+                this.socket.emit('command-response', { message: 'How are you going to fall asleep standing up?', alertType: 'danger' })
+            }
         }
         return false
     }
