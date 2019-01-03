@@ -215,6 +215,7 @@ let game = {
                     player.currentEnemy.socket.emit('command-response', {message: 'You won!', alertType: 'success'})
                     player.currentEnemy.hp = 0
                     player.currentEnemy.attacked = false
+                    player.currentEnemy.removeEffects()
                     player.currentEnemy.currentEnemy = undefined
                 }
 
