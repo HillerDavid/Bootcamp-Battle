@@ -163,8 +163,11 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
                 this.currentEnemy.effects.push(new Effect('bootstrap', -1, 0, 0, 0, 5, false))
             } else if (modifier === 'do nothing') {
                 
+            } else {
+                this.socket.emit('command-response', { message: `${modifier} is not a spell.`, alertType: 'danger' })
+                return
             }
-            this.socket.emit('command-response', {message: `${this.name} casts ${modifier}...`, alertType: 'secondary'})
+            this.socket.emit('command-response', { message: `${this.name} casts ${modifier}...`, alertType: 'secondary' })
             this.attacked = true
             this.currentEnemy.isAlive()
             if (this.currentEnemy) {
