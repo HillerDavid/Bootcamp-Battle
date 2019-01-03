@@ -32,9 +32,7 @@ let game = {
             cost: 10,
             attack: 0,
             defense: 0,
-
             hp: -5,
-
             mp: 5,
             equippable: false,
             usable: true
@@ -149,14 +147,12 @@ let game = {
             //If the player didn't already have the item in their inventory add it
             player.inventory.push(new Item(item.item_name, item.attack, item.defense,
                 item.hp, item.mp, item.equippable, item.usable, false))
+            player.inventory[player.inventory.length - 1].equipped = item.equipped
 
             //Save the item if it should be saved
             if (shouldSave) {
                 game.methods.saveItem(player, player.inventory[player.inventory.length - 1])
             }
-
-            //If the item didn't previously exist in their inventory the loop didn't add them, so call the method again to add the rest
-            game.methods.giveItem(player, item, quantity - 1, shouldSave)
         },
 
         //Removes a certain quantity of an item from the database
@@ -214,6 +210,17 @@ let game = {
             for(let i = 0; i < playerKeys.length; i++) {
                 //Set a player variable equal to the current player for ease of access
                 let player = game.players[playerKeys[i]]
+
+                if (player.currentEnemy && player.currentEnemy.level) {
+                    player.currentEnemy.socket.emit('command-response', {message: 'You won!', alertType: 'success'})
+                    player.currentEnemy.hp = 0
+                    player.currentEnemy.attacked = false
+                    player.currentEnemy.currentEnemy = undefined
+                }
+
+                for(let i = 0; i < player.effects.length; i++) {
+                    player.effects[i].undoEffect(player)
+                }
                 //Update the database with their info
                 db.Player.update({
                     attack: player.attack,
@@ -231,6 +238,23 @@ let game = {
                 //Execute the callback when the save is done
                 }).then(cb)
             }
+        },
+
+        updateItem: function(player, item) {
+            db.Item.update({
+                attack: item.effect.attack,
+                defense: item.effect.defense,
+                hp: item.effect.hp,
+                mp: item.effect.mp,
+                equipped: item.equipped
+            }, {
+                where: {
+                    PlayerId: player.player_id,
+                    item_name: item.item_name
+                }
+            }).then(() => {
+                console.log('Item updated')
+            })
         }
     }
 }
