@@ -16,6 +16,7 @@ module.exports = function Enemy(name, attack, defense, hp, expValue, currencyVal
 
     //This method is where the enemy actually fights back
     this.attackCommand = function(){
+        this.update()
         //Pick a random player being fought to target
         let targetIndex = Math.floor(Math.random() * this.players.length)
         let target = this.players[targetIndex]
@@ -35,7 +36,7 @@ module.exports = function Enemy(name, attack, defense, hp, expValue, currencyVal
         console.log(`${target.name}'s hp: ${target.hp}`)
 
         //Check if the attacked player is still alive
-        let alive = target.isAlive()
+        let alive = target.isAlive(true)
 
         //Loop through the players being fought and allow them to attack again
         for(let player of this.players) {
@@ -46,6 +47,8 @@ module.exports = function Enemy(name, attack, defense, hp, expValue, currencyVal
                 player.socket.emit('command-response', {message: `${target.name} fainted`, alertType: 'danger'})
             }
         }
+
+        target.isAlive()
         
         if(!alive) {
             this.players.splice(targetIndex, 1)
@@ -102,6 +105,8 @@ module.exports = function Enemy(name, attack, defense, hp, expValue, currencyVal
             player.attacked = false
             //Remove the reference to the enemy
             player.currentEnemy = false
+            
+            player.levelUp()
         }
     }
 
@@ -114,5 +119,42 @@ module.exports = function Enemy(name, attack, defense, hp, expValue, currencyVal
             }
         }
         return string
+    }
+
+    this.relayEffect = function(descriptor, value, effectName, isGood) {
+        let message = `${this.name} is ${descriptor} ${value} by ${effectName}`
+        for (let i = 0; i < this.players.length; i++) {
+            this.players[i].socket.emit('command-response', { message, alertType: isGood ? 'danger' : 'secondary'})
+        } 
+    }
+
+    this.update = function() {
+        for(let i = 0; i < this.effects.length; i++) {
+            let effect = this.effects[i]
+            if (effect.attack > 0) {
+                this.relayEffect('strengthened', effect.attack, effect.name, true)
+            } else if (effect.attack < 0) {
+                this.relayEffect('weakened', effect.attack, effect.name, false)
+            }
+            if (effect.defense > 0) {
+                this.relayEffect('protected', effect.defense, effect.name, true)
+            } else if (effect.defense < 0) {
+                this.relayEffect('made vulnerable', effect.defense, effect.name, true)
+            }
+            if (effect.hp < 0) {
+                this.relayEffect('healed', effect.hp, effect.name, true)
+            } else if (effect.hp > 0) {
+                this.relayEffect('hit', effect.hp, effect.name, false)
+            }
+            if (effect.mp > 0) {
+                this.relayEffect('excited', effect.mp, effect.name, true)
+            } else if (effect.mp < 0) {
+                this.relayEffect('discouraged', effect.mp, effect.name, false)
+            }
+            effect.update(this)
+        }
+        if (this.hp < 0) {
+            this.hp = 0
+        }
     }
 }

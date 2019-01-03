@@ -134,6 +134,12 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         if ((this.room === 'class' || this.room === 'panera') && !this.attacked && this.currentEnemy) {
             return true
         }
+        if (this.attacked) {
+            this.socket.emit('command-response', { message: `It is not ${this.name}'s turn.`, alertType: 'danger' })
+        }
+        if (!this.currentEnemy) {
+            this.socket.emit('command-response', { message: `${this.name} is not currently in a fight.`, alertType: 'danger' })
+        }
         return false
     }
 
@@ -143,11 +149,22 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
             if (!this.isAlive()) {
                 return
             }
-            if (modifier === 'jquery') {
-                this.currentEnemy.effects.push(new Effect('Jquery', 0, 0, 10, 0, 0, false))
+            if (modifier === 'for loop') {
+                this.currentEnemy.effects.push(new Effect('for loop', 0, 0, 1, 0, 5, true))
+            } else if (modifier === 'jquery') {
+                this.effects.push(new Effect('jquery', 1, 0, 0, 0, 5, false))
+            } else if (modifier === 'mysql') {
+                this.currentEnemy.effects.push(new Effect('mysql', 0, -1, 0, 0, 5, false))
+            } else if (modifier === 'sequelize') {
+                this.effects.push(new Effect('sequelize', 0, 1, 0, 0, 5, false))
+            } else if (modifier === 'bootstrap') {
+                this.currentEnemy.effects.push(new Effect('bootstrap', -1, 0, 0, 0, 5, false))
+            } else if (modifier === 'do nothing') {
+                
             }
             this.socket.emit('command-response', {message: `${this.name} casts ${modifier}...`, alertType: 'secondary'})
             this.attacked = true
+            this.currentEnemy.isAlive()
             if (this.currentEnemy.level) {
                 this.currentEnemy.attacked = false
                 this.currentEnemy.socket.emit('command-response', {message: `${this.name} casts ${modifier}...`, alertType: 'danger'})
@@ -170,6 +187,10 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
                 }
                 if (player.challenges.includes(this.socket.id)) {
                     this.socket.emit('command-response', {message: `${this.name} has already challenged ${modifier}`, alertType: 'danger'})
+                    return
+                }
+                if (player.hiddenNumber === this.hiddenNumber) {
+                    this.socket.emit('command-response', {message: 'You cannot challenge yourself', alertType: 'danger'})
                     return
                 }
                 player.socket.emit('command-response', {message: `${this.name} challenged you`, alertType: 'success'})
@@ -234,21 +255,23 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
     }
 
     //Returns if the player is still alive
-    this.isAlive = function(){
+    this.isAlive = function(justCheck = false){
         let alive = (this.hp < this.level * 10)
-        if (!alive) {
-            if (this.room === 'class') {
-                this.faint()
-            } else {
-                this.currentEnemy.socket.emit('command-response', {message: 'You won!', alertType: 'success'})
-                this.currentEnemy.hp = 0
-                this.currentEnemy.attacked = false
-                this.currentEnemy.currentEnemy = undefined
-                this.socket.emit('command-response', {message: 'You lost', alertType: 'danger'})
-                this.hp = 0
-                this.attacked = false
-                this.currentEnemy = undefined
-                this.effects = []
+        if (!justCheck) {
+            if (!alive) {
+                if (this.room === 'class') {
+                    this.faint()
+                } else {
+                    this.currentEnemy.socket.emit('command-response', {message: 'You won!', alertType: 'success'})
+                    this.currentEnemy.hp = 0
+                    this.currentEnemy.attacked = false
+                    this.currentEnemy.currentEnemy = undefined
+                    this.socket.emit('command-response', {message: 'You lost', alertType: 'danger'})
+                    this.hp = 0
+                    this.attacked = false
+                    this.currentEnemy = undefined
+                    this.effects = []
+                }
             }
         }
         return alive
@@ -260,6 +283,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
             this.level++
             this.attack++
             this.defense += 2
+            this.socket.emit('command-response', { message: `${this.name} leveled up!`, alertType: 'success' })
         }
     }
 
@@ -343,25 +367,27 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
     this.update = function() {
         for(let i = 0; i < this.effects.length; i++) {
             let effect = this.effects[i]
-            if (effect.attack > 0) {
-                this.relayEffect('strengthened', effect.attack, effect.name, true)
-            } else if (effect.attack < 0) {
-                this.relayEffect('weakened', effect.attack, effect.name, false)
-            }
-            if (effect.defense > 0) {
-                this.relayEffect('protected', effect.defense, effect.name, true)
-            } else if (effect.defense < 0) {
-                this.relayEffect('made vulnerable', effect.defense, effect.name, true)
-            }
-            if (effect.hp < 0) {
-                this.relayEffect('energized', effect.hp, effect.name, true)
-            } else if (effect.hp > 0) {
-                this.relayEffect('made tired', effect.hp, effect.name, false)
-            }
-            if (effect.mp > 0) {
-                this.relayEffect('excited', effect.mp, effect.name, true)
-            } else if (effect.mp < 0) {
-                this.relayEffect('discouraged', effect.mp, effect.name, false)
+            if (effect.pulse || effect.first) {
+                if (effect.attack > 0) {
+                    this.relayEffect('strengthened', Math.abs(effect.attack), effect.name, true)
+                } else if (effect.attack < 0) {
+                    this.relayEffect('weakened', Math.abs(effect.attack), effect.name, false)
+                }
+                if (effect.defense > 0) {
+                    this.relayEffect('protected', Math.abs(effect.defense), effect.name, true)
+                } else if (effect.defense < 0) {
+                    this.relayEffect('made vulnerable', Math.abs(effect.defense), effect.name, true)
+                }
+                if (effect.hp < 0) {
+                    this.relayEffect('healed', Math.abs(effect.hp), effect.name, true)
+                } else if (effect.hp > 0) {
+                    this.relayEffect('hit', Math.abs(effect.hp), effect.name, false)
+                }
+                if (effect.mp > 0) {
+                    this.relayEffect('excited', Math.abs(effect.mp), effect.name, true)
+                } else if (effect.mp < 0) {
+                    this.relayEffect('discouraged', Math.abs(effect.mp), effect.name, false)
+                }
             }
             effect.update(this)
         }

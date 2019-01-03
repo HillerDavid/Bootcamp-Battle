@@ -32,9 +32,7 @@ let game = {
             cost: 10,
             attack: 0,
             defense: 0,
-
             hp: -5,
-
             mp: 5,
             equippable: false,
             usable: true
@@ -212,6 +210,17 @@ let game = {
             for(let i = 0; i < playerKeys.length; i++) {
                 //Set a player variable equal to the current player for ease of access
                 let player = game.players[playerKeys[i]]
+
+                if (player.currentEnemy && player.currentEnemy.level) {
+                    player.currentEnemy.socket.emit('command-response', {message: 'You won!', alertType: 'success'})
+                    player.currentEnemy.hp = 0
+                    player.currentEnemy.attacked = false
+                    player.currentEnemy.currentEnemy = undefined
+                }
+
+                for(let i = 0; i < player.effects.length; i++) {
+                    player.effects[i].undoEffect(player)
+                }
                 //Update the database with their info
                 db.Player.update({
                     attack: player.attack,
