@@ -168,6 +168,9 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
                 return
             }
             this.socket.emit('command-response', { message: `${this.name} casts ${modifier}...`, alertType: 'secondary' })
+            if (modifier === 'do nothing') {
+                this.socket.emit('command-response', { message: `Shouldn't you be coding?` })
+            }
             this.attacked = true
             this.currentEnemy.isAlive()
             if (this.currentEnemy) {
