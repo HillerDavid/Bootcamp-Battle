@@ -25,6 +25,7 @@ function displayStats(data) {
 socket.on('identify', identify)
 socket.on('chat', incomingChat)
 socket.on('command-response', (response) => {
+    socket.emit('stats', 'EXPLAAAIIIINNN TOOO MEEEE')
     let color
     switch (response.alertType) {
     case 'danger':
