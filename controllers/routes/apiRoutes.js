@@ -53,9 +53,9 @@ module.exports = function(app, game) {
     })
 
     // Test route for stats **BEGIN**
-    // app.get('/api/statistics', (req, res) => {
-    //     db.Player.findOne({where:{player_name: 'Zenmaioh'}}).then(data => {
-    //         res.json(data)
-    //     })
-    // })
+    app.get('/api/statistics', (req, res) => {
+        db.Player.findOne({where:{player_name: }}).then(data => {
+            res.json(data)
+        })
+    })
 }
