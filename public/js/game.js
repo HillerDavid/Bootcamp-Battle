@@ -1,31 +1,31 @@
 let socket = io.connect()
 let gitBashed
 
-$('#stats.tab').on('click', event => {
-    
+$('#stats-tab').on('click', event => {
+    socket.emit('stats', 'EXPLAAAIIIINNN TOOO MEEEE')
 })
 // Test function for displaying stats **START**
-displayStats()
+// displayStats()
 
 socket.on('stats', displayStats)
 
 function displayStats(data) {
-        console.log(data)
-        $('#stats-player-name').text('Username: ' + data.player_name)
-        $('#stats-level').text('Level: ' + data.level)
-        $('#stats-experience').text('Exp: ' + data.exp)
-        $('#stats-stress').text('Stress: ' + data.hp)
-        $('#stats-mp').text('MP: ' + data.mp)
-        $('#stats-attack').text('Attack: ' + data.attack)
-        $('#stats-defense').text('Defense: ' + data.defense)
-        $('#stats-homework-completed').text('Homeworks Completed: ' + data.homework_completed)
-        $('#stats-currency').text('Currency: ' + data.currency)
+    console.log(data)
+    $('#stats-player-name').text('Username: ' + data.player_name)
+    $('#stats-level').text('Level: ' + data.level)
+    $('#stats-experience').text('Exp: ' + data.exp)
+    $('#stats-stress').text('Stress(HP) ' + data.hp + '/' + data.stressLimit + ' (Stress Limit)')
+    $('#stats-mp').text('Endurance(MP): ' + data.mp)
+    $('#stats-attack').text('Front End(Attack): ' + data.attack)
+    $('#stats-defense').text('Back End(Defense): ' + data.defense)
+    $('#stats-currency').text('Nerd Cred(Currency): ' + data.currency)
 }
 // Test function for display stats **END**
 
 socket.on('identify', identify)
 socket.on('chat', incomingChat)
 socket.on('command-response', (response) => {
+    socket.emit('stats', 'EXPLAAAIIIINNN TOOO MEEEE')
     let color
     switch (response.alertType) {
     case 'danger':
