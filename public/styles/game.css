@@ -173,6 +173,16 @@ div>.input-group {
   background-color: whitesmoke;
 }
 
+#help {
+  display: block;
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-color: whitesmoke;
+  padding: 0;
+  margin: 0;
+}
+
 #message-input {
   height: 5vh;
 }

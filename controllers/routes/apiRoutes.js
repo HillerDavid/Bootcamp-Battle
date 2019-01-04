@@ -39,4 +39,11 @@ module.exports = function(app, game) {
             res.end()
         })
     })
+
+    // Test route for stats **BEGIN**
+    // app.get('/api/statistics', (req, res) => {
+    //     db.Player.findOne({where:{player_name: 'Zenmaioh'}}).then(data => {
+    //         res.json(data)
+    //     })
+    // })
 }

@@ -1,6 +1,25 @@
 let socket = io.connect()
 let gitBashed
 
+// Test function for displaying stats **START**
+// displayStats()
+
+// function displayStats() {
+//     $.get('/api/statistics', (data) => {
+//         console.log(data)
+//         $('#stats-player-name').text('Username: ' + data.player_name)
+//         $('#stats-level').text('Level: ' + data.level)
+//         $('#stats-experience').text('Exp: ' + data.exp)
+//         $('#stats-stress').text('Stress: ' + data.hp)
+//         $('#stats-mp').text('MP: ' + data.mp)
+//         $('#stats-attack').text('Attack: ' + data.attack)
+//         $('#stats-defense').text('Defense: ' + data.defense)
+//         $('#stats-homework-completed').text('Homeworks Completed: ' + data.homework_completed)
+//         $('#stats-currency').text('Currency: ' + data.currency)
+//     })
+// }
+// Test function for display stats **END**
+
 socket.on('chat', incomingChat)
 socket.on('command-response', (response) => {
     gitBashed.echo(response.message)
@@ -50,7 +69,7 @@ function incomingChat(data) {
     let messageText = $('<p>')
     messageText.text(incomingMessage)
     chatDiv.append(avatar, playerName, messageText)
-    $('#chat').append(chatDiv)
+    $('#message-screen').append(chatDiv)
     scrollDown()
 }
 
@@ -85,7 +104,9 @@ $('#chat-message-area').on('keyup', function (event) {
 })
 
 function scrollDown() {
-    $('#message-screen').animate({scrollTop: $('#message-screen').prop('scrollHeight')}, 500);
+    $('#message-screen').animate({
+        scrollTop: $('#message-screen').prop('scrollHeight')
+    }, 500);
 }
 
 function addPlayer(data) {
