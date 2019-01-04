@@ -1,13 +1,17 @@
 let db = require('../../models')
 let passport = require('../../config/passport')
 let isAuthenticated = require('../../config/middleware/isAuthenticated')
-module.exports = function(app, game) {
-    app.post('/api/createaccount', function(req, res) {
-        db.Player.findOne({ where: { email:req.body.email } }).then(function(data) {
+module.exports = function (app, game) {
+    app.post('/api/createaccount', function (req, res) {
+        db.Player.findOne({
+            where: {
+                email: req.body.email
+            }
+        }).then(function (data) {
             console.log('test')
             if (!data) {
                 console.log('player created')
-                db.Player.create(req.body).then(function(data) {
+                db.Player.create(req.body).then(function (data) {
                     res.json(data)
                 })
             } else {
@@ -17,8 +21,13 @@ module.exports = function(app, game) {
         })
     })
 
-    app.post('/api/login', passport.authenticate('local'), function(req, res) {
-        db.Player.findOne({where:{email:req.body.email}, include: [db.Item]}).then(function(data) {
+    app.post('/api/login', passport.authenticate('local'), function (req, res) {
+        db.Player.findOne({
+            where: {
+                email: req.body.email
+            },
+            include: [db.Item]
+        }).then(function (data) {
             if (data) {
                 return res.json('/game')
             }
@@ -26,15 +35,20 @@ module.exports = function(app, game) {
         })
     })
 
-    app.post('/api/identify', isAuthenticated, function(req, res) {
-        for(let key in game.players) {
+    app.post('/api/identify', isAuthenticated, function (req, res) {
+        for (let key in game.players) {
             if (game.players[key].hiddenNumber === req.body.number) {
                 return
             }
         }
-        db.Player.findOne({where:{email:req.user.email}, include: [db.Item]}).then(function(data) {
+        db.Player.findOne({
+            where: {
+                email: req.user.email
+            },
+            include: [db.Item]
+        }).then(function (data) {
             if (data) {
-                for(let key in game.players) {
+                for (let key in game.players) {
                     let player = game.players[key]
                     if (player.player_id === req.user.id) {
                         res.status(400)
@@ -49,13 +63,6 @@ module.exports = function(app, game) {
                 res.status(500)
                 res.send('/')
             }
-        })
-    })
-
-    // Test route for stats **BEGIN**
-    app.get('/api/statistics', (req, res) => {
-        db.Player.findOne({where:{player_name: }}).then(data => {
-            res.json(data)
         })
     })
 }
