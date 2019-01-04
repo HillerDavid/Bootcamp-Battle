@@ -56,6 +56,16 @@ let game = {
             mp: 0,
             equippable: true,
             usable: false
+        },
+        'optical mouse': {
+            item_name: 'optical mouse',
+            cost: 30,
+            attack: 1,
+            defense: 1,
+            hp: 0,
+            mp: 0,
+            equippable: true,
+            usable: false
         }
     },
     
