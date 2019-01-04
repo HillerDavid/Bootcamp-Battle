@@ -57,11 +57,11 @@ module.exports = function (io, game) {
 
         //When chat is recieved send out a message to everyone else, attatching the player name
         function updateChat(data) {
-            if (!game.player[socket.id]) {
+            if (!game.players[socket.id]) {
                 return
             }
             socket.broadcast.emit('chat', { user: game.players[socket.id].name, message: data })
-            console.log(data)
+            // console.log(data)
         }
 
         //Call the game obj method to remove a given player
