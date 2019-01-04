@@ -77,7 +77,7 @@ module.exports = function Enemy(name, attack, defense, hp, expValue, currencyVal
             }
         } else {
             for(let player of this.players) {
-                player.socket.emit('command-response', {message: `${this.name} has be completed`, alertType: 'success'})
+                player.socket.emit('command-response', {message: `${this.name} has been completed`, alertType: 'success'})
                 this.payout()
             }
         }
@@ -99,7 +99,7 @@ module.exports = function Enemy(name, attack, defense, hp, expValue, currencyVal
 
             player.currency += individualCurrency
 
-            player.socket.emit('command-response', {message: `${player.name} recieved ${individualExp} exp and ${individualCurrency} nerd cred!`, alertType: 'success'})
+            player.socket.emit('command-response', {message: `${player.name} received ${individualExp} exp and ${individualCurrency} nerd cred!`, alertType: 'success'})
 
             //Reset their ability to attack
             player.attacked = false
