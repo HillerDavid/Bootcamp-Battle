@@ -213,20 +213,19 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
     //Allows the player to type in console.log and see information about their character
     this['console.logCommand'] = function() {
         let message = ''
-        for(let key in this) {
-            if (key === 'hiddenNumber') {
-                continue
-            }
-            if (typeof this[key] !== 'function' && typeof this[key] !== 'object') {
-                message += `${key}: ${this[key]}\n`
-            }
-        }
-        message += 'inventory: ['
+        message += `Stress(HP): ${this.hp}/${this.level * 10}(Stress Limit)\n`
+        message += `Endurance(MP): ${this.mp}\n`
+        message += `Front End(Attack): ${this.attack}\n`
+        message += `Back End(Defense): ${this.defense}\n`
+        message += `Nerd Cred(Money): ${this.currency}\n`
+        message += `Exp: ${this.exp}\n`
+        message += `Level: ${this.level}\n`
+        message += 'Backpack: ['
         for(let i = 0; i < this.inventory.length; i++) {
             if (i === 0) {
                 message += '\n'
             }
-            message += `  ${this.inventory[i].item_name}: ${this.inventory[i].quantity}\n`
+            message += `  ${this.inventory[i].item_name}: ${this.inventory[i].quantity} ${(this.inventory[i].equippable && this.inventory[i].equipped) ? 'equipped' : ''}\n`
         }
         message += ']'
         message = message.trim()
