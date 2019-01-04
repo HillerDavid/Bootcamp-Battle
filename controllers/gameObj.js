@@ -1,8 +1,3 @@
-let Player = require('./playerObj')
-let Enemy = require('./enemyObj')
-let Item = require('./itemObj')
-let db = require('../models')
-
 let game = {
     //This is the list of players in object form for easier manipulation
     players: {},
@@ -10,19 +5,40 @@ let game = {
     //This is the list of enemies in object form for easier manipulation
     enemies: {},
 
+    //This is the list of items in object form for easier manipulations
     items: {
-        'health potion': {
-            item_name: 'health potion',
+        'energy drink': {
+            item_name: 'energy drink',
             cost: 10,
             attack: 0,
             defense: 0,
-            hp: 10,
+            hp: -10,
             mp: 0,
             equippable: false,
             usable: true
         },
-        'sword': {
-            item_name: 'sword',
+        'sports drink': {
+            item_name: 'sports drink',
+            cost: 10,
+            attack: 0,
+            defense: 0,
+            hp: 0,
+            mp: 10,
+            equippable: false,
+            usable: true
+        },
+        'coffee': {
+            item_name: 'coffee',
+            cost: 10,
+            attack: 0,
+            defense: 0,
+            hp: -5,
+            mp: 5,
+            equippable: false,
+            usable: true
+        },
+        'mechanical keyboard': {
+            item_name: 'mechanical keyboard',
             cost: 50,
             attack: 5,
             defense: 0,
@@ -31,8 +47,8 @@ let game = {
             equippable: true,
             usable: false
         },
-        'shield': {
-            item_name: 'shield',
+        'solid-state drive': {
+            item_name: 'solid-state drive',
             cost: 50,
             attack: 0,
             defense: 5,
@@ -53,6 +69,8 @@ let game = {
             game.players[tempKey] = new Player(data.id, data.player_name, data.attack,
                 data.defense, data.hp, data.mp, data.currency, data.homework_completed,
                 data.exp, data.level)
+
+            console.log('Player added')
 
             game.players[tempKey].hiddenNumber = tempKey
 
@@ -84,8 +102,6 @@ let game = {
                 delete game.players[key]
                 //Store the object at it's new location: the player's soccket connection id
                 game.players[socketId] = temp
-                //Set reference in the player object to the socket id in case it's needed
-                game.players[socketId].reference = socketId
                 console.log('Player associated!!!')
             }
         },
@@ -93,16 +109,19 @@ let game = {
         //Create an enemy object in the game enemy object list and associate it with a player
         createEnemy: function(players) {
             let currentPlayer = players[0]
+            let id = currentPlayer.socket.id
             //Create the reference where the enemy will be kept
-            game.enemies[currentPlayer.reference] = {}
+            game.enemies[id] = {}
             //Create the enemy object and put it in it's location, giving it an array of players it is fighting
-            game.enemies[currentPlayer.reference] = new Enemy('assignment', (currentPlayer.level * 2) + 4, currentPlayer.level, (currentPlayer.level * 5) + 9, currentPlayer.level * 40, currentPlayer.reference, players)
+
+            game.enemies[id] = new Enemy('assignment', (currentPlayer.level * 2) + 4, currentPlayer.level, (currentPlayer.level * 5) + 9, currentPlayer.level * 40, currentPlayer.level * 40, id, players)
+
             //Loop through the players
             for(let player of players) {
                 //If the player isn't currently fighting an enemy
                 if (!player.currentEnemy) {
                     //Set the player's currentEnemy to this one
-                    player.currentEnemy = game.enemies[currentPlayer.reference]
+                    player.currentEnemy = game.enemies[id]
                 }
             }
         },
@@ -120,7 +139,7 @@ let game = {
                             game.methods.saveItem(player, playerItem)
                         }
                     }
-                    console.log(player.inventory)
+                    // console.log(player.inventory)
                     return
                 }
             }
@@ -128,14 +147,12 @@ let game = {
             //If the player didn't already have the item in their inventory add it
             player.inventory.push(new Item(item.item_name, item.attack, item.defense,
                 item.hp, item.mp, item.equippable, item.usable, false))
+            player.inventory[player.inventory.length - 1].equipped = item.equipped
 
             //Save the item if it should be saved
             if (shouldSave) {
                 game.methods.saveItem(player, player.inventory[player.inventory.length - 1])
             }
-
-            //If the item didn't previously exist in their inventory the loop didn't add them, so call the method again to add the rest
-            game.methods.giveItem(player, item, quantity - 1, shouldSave)
         },
 
         //Removes a certain quantity of an item from the database
@@ -174,10 +191,10 @@ let game = {
         saveItem: function(player, item) {
             db.Item.create({
                 item_name: item.item_name,
-                attack: item.attack,
-                defense: item.defense,
-                hp: item.hp,
-                mp: item.mp,
+                attack: item.effect.attack,
+                defense: item.effect.defense,
+                hp: item.effect.hp,
+                mp: item.effect.mp,
                 equippable: item.equippable,
                 usable: item.usable,
                 equipped: item.equipped,
@@ -193,11 +210,21 @@ let game = {
             for(let i = 0; i < playerKeys.length; i++) {
                 //Set a player variable equal to the current player for ease of access
                 let player = game.players[playerKeys[i]]
+
+                if (player.currentEnemy && player.currentEnemy.level) {
+                    player.currentEnemy.socket.emit('command-response', {message: 'You won!', alertType: 'success'})
+                    player.currentEnemy.hp = 0
+                    player.currentEnemy.attacked = false
+                    player.currentEnemy.removeEffects()
+                    player.currentEnemy.currentEnemy = undefined
+                }
+
+                player.removeEffects()
                 //Update the database with their info
                 db.Player.update({
                     attack: player.attack,
                     defense: player.defense,
-                    hp: player.hp,
+                    hp: 0,
                     mp: player.mp,
                     currency: player.currency,
                     homework_completed: player.homework_completed,
@@ -210,8 +237,30 @@ let game = {
                 //Execute the callback when the save is done
                 }).then(cb)
             }
+        },
+
+        updateItem: function(player, item) {
+            db.Item.update({
+                attack: item.effect.attack,
+                defense: item.effect.defense,
+                hp: item.effect.hp,
+                mp: item.effect.mp,
+                equipped: item.equipped
+            }, {
+                where: {
+                    PlayerId: player.player_id,
+                    item_name: item.item_name
+                }
+            }).then(() => {
+                console.log('Item updated')
+            })
         }
     }
 }
 
 module.exports = game
+
+let Player = require('./playerObj')
+let Enemy = require('./enemyObj')
+let Item = require('./itemObj')
+let db = require('../models')
