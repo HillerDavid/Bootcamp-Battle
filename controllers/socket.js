@@ -18,6 +18,8 @@ module.exports = function (io, game) {
         //Set up an event for when a player disconnects
         socket.on('disconnect', removePlayer)
 
+        socket.on('stats', sendStats)
+
         function askForIdentification() {
             console.log('ID not recieved')
             socket.emit('identify', 'Please make ajax request')
@@ -72,6 +74,24 @@ module.exports = function (io, game) {
             let room = game.players[socket.id].room
             updatePlayerLocation(room)
             game.methods.removePlayer(socket.id)
+        }
+
+        function sendStats() {
+            if (!game.players[socket.id]) {
+                return
+            }
+            let player = game.players[socket.id]
+            socket.emit('stats', {
+                player_name: player.name,
+                level: player.level,
+                exp: player.exp,
+                hp: player.hp,
+                stressLimit: player.level * 10,
+                mp: player.mp,
+                attack: player.attack,
+                defense: player.defense,
+                currency: player.currency
+            })
         }
 
         function updatePlayerLocation(previousRoom, newRoom) {

@@ -1,9 +1,31 @@
 let socket = io.connect()
 let gitBashed
 
+$('#stats-tab').on('click', event => {
+    socket.emit('stats', 'EXPLAAAIIIINNN TOOO MEEEE')
+})
+// Test function for displaying stats **START**
+// displayStats()
+
+socket.on('stats', displayStats)
+
+function displayStats(data) {
+    console.log(data)
+    $('#stats-player-name').text('Username: ' + data.player_name)
+    $('#stats-level').text('Level: ' + data.level)
+    $('#stats-experience').text('Exp: ' + data.exp)
+    $('#stats-stress').text('Stress(HP) ' + data.hp + '/' + data.stressLimit + ' (Stress Limit)')
+    $('#stats-mp').text('Endurance(MP): ' + data.mp)
+    $('#stats-attack').text('Front End(Attack): ' + data.attack)
+    $('#stats-defense').text('Back End(Defense): ' + data.defense)
+    $('#stats-currency').text('Nerd Cred(Currency): ' + data.currency)
+}
+// Test function for display stats **END**
+
 socket.on('identify', identify)
 socket.on('chat', incomingChat)
 socket.on('command-response', (response) => {
+    socket.emit('stats', 'EXPLAAAIIIINNN TOOO MEEEE')
     let color
     switch (response.alertType) {
     case 'danger':
@@ -106,7 +128,9 @@ $('#chat-message-area').on('keyup', function (event) {
 })
 
 function scrollDown() {
-    $('#message-screen').animate({scrollTop: $('#message-screen').prop('scrollHeight')}, 500);
+    $('#message-screen').animate({
+        scrollTop: $('#message-screen').prop('scrollHeight')
+    }, 500);
 }
 
 function addPlayer(data) {
