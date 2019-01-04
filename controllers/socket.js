@@ -75,6 +75,9 @@ module.exports = function (io, game) {
         }
 
         function updatePlayerLocation(previousRoom, newRoom) {
+            if (previousRoom === newRoom) {
+                return
+            }
             for(let key in game.players) {
                 if (key === socket.id) {
                     continue
