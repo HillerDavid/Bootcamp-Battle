@@ -439,6 +439,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
                             this.inventory.splice(i, 1)
                         }
                         this.attacked = true
+                        this.currentEnemy.isAlive()
                         if (this.currentEnemy && this.currentEnemy.level) {
                             this.currentEnemy.attacked = false
                         }
