@@ -213,11 +213,11 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
     //Allows the player to type in console.log and see information about their character
     this['console.logCommand'] = function() {
         let message = ''
-        message += `Stress(HP): ${this.hp}/${this.level * 10}(Stress Limit)\n`
+        message += `Stress(HP): ${this.hp}/${this.level * 10} (Stress Limit)\n`
         message += `Endurance(MP): ${this.mp}\n`
         message += `Front End(Attack): ${this.attack}\n`
         message += `Back End(Defense): ${this.defense}\n`
-        message += `Nerd Cred(Money): ${this.currency}\n`
+        message += `Nerd Cred(Currency): ${this.currency}\n`
         message += `Exp: ${this.exp}\n`
         message += `Level: ${this.level}\n`
         message += 'Backpack: ['
