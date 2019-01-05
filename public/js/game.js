@@ -6,20 +6,21 @@ $('#stats-tab').on('click', event => {
 })
 
 $('#inventory-tab').on('click', event => {
-    // socket goes here
+    // socket for inventory tab will be here.
 })
 
-socket.on('stats', displayStats)
 
-displayInventory = data => {
-    console.log(data)
-    $('#energy-drink-count').text('0')
-    $('#sports-drink-count').text('0')
-    $('#coffee-count').text('0')
-    $('#mechanical-keyboard-count').text('0')
-    $('#ssd-count').text('0')
-    $('#optical-mouse-count').text('0')
-}
+// displayInventory = data => {
+//     console.log(data)
+//     $('#energy-drink-count').text(`data goes here`)
+//     $('#sports-drink-count').text(`data goes here`)
+//     $('#coffee-count').text(`data goes here`)
+//     $('#mechanical-keyboard-count').text(`data goes here`)
+//     $('#ssd-count').text(`data goes here`)
+//     $('#optical-mouse-count').text(`data goes here`)
+// }
+
+socket.on('stats', displayStats)
 
 function displayStats(data) {
     console.log(data)

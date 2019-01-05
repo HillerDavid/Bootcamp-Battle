@@ -160,8 +160,8 @@ div>.input-group {
 }
 
 .slacker {
-  overflow-x: hidden;
-  overflow-y: scroll;
+  /* overflow-x: hidden;
+  overflow-y: scroll; */
   height: 100vh;
 }
 
@@ -207,7 +207,7 @@ div>.input-group {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #303e4d; 
+  background: whitesmoke; 
 }
 
 #message-screen::-webkit-scrollbar-track {
@@ -216,7 +216,7 @@ div>.input-group {
  
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #303e4d; 
 }
 
 /* Handle on hover */
