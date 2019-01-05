@@ -84,7 +84,6 @@ module.exports = function (io, game) {
             if (!game.players[socket.id]) {
                 return
             }
-            console.log('Sending inventory information')
             let player = game.players[socket.id]
             socket.emit('inventory', {
                 energyDrinks: player.inventory.find(item => item.item_name === 'energy drink') || 0,

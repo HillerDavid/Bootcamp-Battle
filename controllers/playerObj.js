@@ -155,6 +155,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
             if (!this.isAlive()) {
                 return
             }
+            //new Effect(name, attack, defense, hp, mp, turns, pulse)
             if (modifier === 'for loop') {
                 this.currentEnemy.effects.push(new Effect('for loop', 0, 0, 1, 0, 5, true))
             } else if (modifier === 'jquery') {
@@ -280,12 +281,11 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
                     this.currentEnemy.attacked = false
                     this.currentEnemy.removeEffects()
                     this.currentEnemy.currentEnemy = undefined
-                    this.socket.emit('command-response', {message: 'You lost', alertType: 'danger'})
+                    this.socket.emit('command-response', {message: 'You lost.', alertType: 'danger'})
                     this.hp = 0
                     this.attacked = false
                     this.removeEffects()
                     this.currentEnemy = undefined
-                    this.effects = []
                 }
             }
         }

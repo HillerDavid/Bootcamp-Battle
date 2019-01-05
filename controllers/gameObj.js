@@ -226,7 +226,7 @@ let game = {
                 let player = game.players[playerKeys[i]]
 
                 if (player.currentEnemy && player.currentEnemy.level) {
-                    player.currentEnemy.socket.emit('command-response', {message: 'You won!', alertType: 'success'})
+                    player.currentEnemy.socket.emit('command-response', { message: 'You won!', alertType: 'success' })
                     player.currentEnemy.hp = 0
                     player.currentEnemy.attacked = false
                     player.currentEnemy.removeEffects()
