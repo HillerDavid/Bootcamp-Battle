@@ -4,10 +4,22 @@ let gitBashed
 $('#stats-tab').on('click', event => {
     socket.emit('stats', 'EXPLAAAIIIINNN TOOO MEEEE')
 })
-// Test function for displaying stats **START**
-// displayStats()
+
+$('#inventory-tab').on('click', event => {
+    // socket goes here
+})
 
 socket.on('stats', displayStats)
+
+displayInventory = data => {
+    console.log(data)
+    $('#energy-drink-count').text('0')
+    $('#sports-drink-count').text('0')
+    $('#coffee-count').text('0')
+    $('#mechanical-keyboard-count').text('0')
+    $('#ssd-count').text('0')
+    $('#optical-mouse-count').text('0')
+}
 
 function displayStats(data) {
     console.log(data)
@@ -20,7 +32,6 @@ function displayStats(data) {
     $('#stats-defense').text('Back End(Defense): ' + data.defense)
     $('#stats-currency').text('Nerd Cred(Currency): ' + data.currency)
 }
-// Test function for display stats **END**
 
 socket.on('identify', identify)
 socket.on('chat', incomingChat)
