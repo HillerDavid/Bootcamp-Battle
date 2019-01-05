@@ -1,50 +1,82 @@
 <div class="tab-pane fade" id="help" role="tabpanel" aria-labelledby="help-tab">
-        <h1>Help</h1>
-        <hr>
-        <h3>Inventory</h3>
-        <ul>
-            <li>Clicking on the "Inventory" nav-link will display your backpack, which will display all the items you
-                have in storage.</li>
-            <li>Hover over an item to display its information at the bottom of your backpack.</li>
-            <li>Click on an item to consume it. When an item is consumed, its counter reduces. Once the counter reaches
-                0, the item is removed from your backpack.</li>
-        </ul>
-        <hr>
-        <h3>Chat</h3>
-        <ul>
-            <li>Clicking on the 'Chat' nav-link will open the global chat. Here you can interact with users logged into
-                the game.</li>
-            <li>Use the message input area to submit your messages.</li>
-        </ul>
-        <hr>
-        <h3>Stats</h3>
-        <ul>
-            <li>Click on the 'Stats' nav-link to open all the available statistics for your character. These statistics
-                will change for your player as you progress and play the game.</li>
-        </ul>
-        <hr>
-        <h3>Help</h3>
-        <ul>
-            <li>Displays any user-friendly information to help the user navigate through the game. The help tab will
-                also list the list of available commands for the Terminal.</li>
-        </ul>
-        <hr>
-        <h3>Terminal</h3>
-        <ul>
-            <li>Terminal is how the player interacts with the game, the environment, and its players/enemies.</li>
-            <li>Terminal accepts commands similar to GitBash/Terminal. See the complete list below:</li>
-        </ul>
-        <h6>Terminal Commands</h6>
-        <ul>
-            <li><code>move home</code> - Moves the player to Home.</li>
-            <li><code>move panera</code> - Moves the player to Class.</li>
-            <li><code>move vending-machine</code> - Moves the player to the Vending Machines.</li>
-            <li><code>move class</code> - Moves the player to Class.</li>
-            <li><code>buy &ldquo;item&rdquo;</code> - Allows the user to buy a desired item, subtracting the item's cost from the player's accumulated currency.</li>
-            <li><code>challenge</code> - Allows the player to challenge a player or an enemy (assignment or project).</li>
-            <li><code>attack</code> - Allows the player to Attack during a challenge/fight.</li>
-            <li><code>accept</code> - Allows the player to accept a challenge from another player.</li>
-            <li><code>decline</code> - Allows the player to decline a challenge from another player.</li>
-            <li><code>sleep</code> - Allows the user to sleep and reduces their sleep back to 0. You can only use the sleep command when your character is at 'Home'.</li>
-        </ul>
+    <h1>Help</h1>
+    <hr>
+    <h3>Inventory</h3>
+    <ul>
+        <li>Clicking on the "Inventory" nav-link will display your Backpack, which will display all the items you
+            have in storage.</li>
+        <li>Hover over an item to display its information.</li>
+        <li>When an item is consumed/used, its quantity will decrease until you reach 0.</li>
+    </ul>
+    <hr>
+    <h3>Chat</h3>
+    <ul>
+        <li>Clicking on the 'Chat' nav-link will open the Global Chat. Here you can interact with users logged into
+            the game.</li>
+        <li>Use the Message Input area to submit your messages.</li>
+    </ul>
+    <hr>
+    <h3>Stats</h3>
+    <ul>
+        <li>Click on the 'Stats' nav-link to open all the available statistics for your character. These statistics
+            will change for your player as you progress and play the game.</li>
+    </ul>
+    <hr>
+    <h3>Help</h3>
+    <ul>
+        <li>Displays any user-friendly information to help the user navigate through the game. The Help Tab will
+            also list the list of available commands for the Terminal.</li>
+    </ul>
+    <hr>
+    <h3>Terminal</h3>
+    <ul>
+        <li>Terminal is how the player interacts with the game, the environment, and its players/enemies.</li>
+        <li>Terminal accepts commands similar to GitBash/Terminal. See the complete list below:</li>
+    </ul>
+    <h5>Terminal Commands</h5>
+    <h6>General Commands</h6>
+    <ul>
+        <li><code>challenge &lt;player-name&gt;</code> - Allows the player to challenge another player in the same
+            level, or an Assignment.</li>
+        <li><code>sleep</code> - Allows the user to sleep and reduces their stress back to 0. You can only use the
+            sleep command when your character is at 'Home'.</li>
+        <li><code>accept &lt;player-name&gt;</code> - Allows the player to accept a challenge from another player.</li>
+        <li><code>decline &lt;player-name&gt;</code> - Allows the player to decline a challenge from another player.</li>
+        <li><code>console.log</code> - Displays the player's stats in the Terminal.</li>
+        <li><code>clear</code> - Clears all the text in the terminal for the player.</li>
+    </ul>
+    <h6>Moving</h6>
+    <ul>
+        <li><code>move home</code> - Moves the player to Home.</li>
+        <li><code>move panera</code> - Moves the player to Panera.</li>
+        <li><code>move vending machine</code> - Moves the player to the Vending Machines.</li>
+        <li><code>move class</code> - Moves the player to Class.</li>
+    </ul>
+    <h6>Buying Items</h6>
+    <ul>
+        <li><code>buy &ldquo;item&rdquo;</code> - Allows the user to buy a desired item, subtracting the item's
+            cost from the player's Currency (Nerd Cred). </li>
+        <li>If you would like to buy an item in bulk, input: <code>buy &lt;quantity&gt; &lt;item-name&gt;</code></li>
+    </ul>
+    <h6>Items</h6>
+    <ul>
+        <li><code>equip &lt;item-name&gt;</code> - Equips the desired item.</li>
+        <li><code>unequip &lt;item-name&gt;</code> - Unequips the desired item.</li>
+        <li><code>use &lt;item-name&gt;</code> - Uses the desired item.</li>
+        <li><code>sports drink</code> - Heals MP</li>
+        <li><code>energy drink</code> - Heals HP (Stress)</li>
+        <li><code>coffee</code> - Heals MP + HP</li>
+        <li><code>solid-state drive</code> - Increases Defense</li>
+        <li><code>mechanical keyboard</code> - Increases Attack</li>
+        <li><code>optical mouse</code> - Heals HP</li>
+    </ul>
+    <h6>Combat</h6>
+    <ul>
+        <li><code>attack</code> - Attacks the enemy.</li>
+        <li><code>cast jquery</code> - Increases your Attack.</li>
+        <li><code>cast sequelize</code> - Increases your Defense.</li>
+        <li><code>cast bootstrap</code> - Decreases the enemy's Attack.</li>
+        <li><code>cast mysql</code> - Decreases the enemy's Defense.</li>
+        <li><code>cast for loop</code> - Inflicts damage over time on the enemy.</li>
+    </ul>
 </div>

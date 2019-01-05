@@ -1,5 +1,12 @@
 @import url("//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css");
 
+/* this was the changed item. */
+
+html, body {
+  min-height: 100vh;
+  overflow: auto;
+}
+
 .login-block {
   background: #6a85b6;
   /* fallback for old browsers */

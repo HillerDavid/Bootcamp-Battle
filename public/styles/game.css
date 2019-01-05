@@ -152,6 +152,7 @@ div>.input-group {
   height: 100%;
   width: 100%;
   margin: auto;
+  object-fit: cover;
 }
 
 #game-background-div {
@@ -159,9 +160,14 @@ div>.input-group {
 }
 
 .slacker {
-  overflow-x: hidden;
-  overflow-y: scroll;
+  /* overflow-x: hidden;
+  overflow-y: scroll; */
   height: 100vh;
+}
+
+.card-footer {
+  background-color: #303e4d;
+  color: white;
 }
 
 #message-screen{
@@ -179,8 +185,10 @@ div>.input-group {
   overflow-y: scroll;
   overflow-x: hidden;
   background-color: whitesmoke;
-  padding: 0;
-  margin: 0;
+  margin-left: -15px;
+  margin-right: -15px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 #message-input {
@@ -199,7 +207,7 @@ div>.input-group {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #303e4d; 
+  background: whitesmoke; 
 }
 
 #message-screen::-webkit-scrollbar-track {
@@ -208,7 +216,7 @@ div>.input-group {
  
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #303e4d; 
 }
 
 /* Handle on hover */
