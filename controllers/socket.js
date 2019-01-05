@@ -20,6 +20,8 @@ module.exports = function (io, game) {
 
         socket.on('stats', sendStats)
 
+        socket.on('inventory', sendInventory)
+
         function askForIdentification() {
             console.log('ID not recieved')
             socket.emit('identify', 'Please make ajax request')
@@ -33,6 +35,7 @@ module.exports = function (io, game) {
                 return
             }
             game.players[socket.id].socket = socket
+            sendInventory()
             let newRoom = game.players[socket.id].room
             updatePlayerLocation(undefined, newRoom)
         }
@@ -49,6 +52,7 @@ module.exports = function (io, game) {
             if (game.players[socket.id][`${command}Command`]) {
                 let previousRoom = game.players[socket.id].room
                 game.players[socket.id][`${command}Command`](modifier)
+                sendInventory()
                 if (command === 'move' && previousRoom !== game.players[socket.id].room) {
                     updatePlayerLocation(previousRoom, game.players[socket.id].room)
                 }
@@ -74,6 +78,22 @@ module.exports = function (io, game) {
             let room = game.players[socket.id].room
             updatePlayerLocation(room)
             game.methods.removePlayer(socket.id)
+        }
+
+        function sendInventory() {
+            if (!game.players[socket.id]) {
+                return
+            }
+            console.log('Sending inventory information')
+            let player = game.players[socket.id]
+            socket.emit('inventory', {
+                energyDrinks: player.inventory.find(item => item.item_name === 'energy drink') || 0,
+                sportsDrinks: player.inventory.find(item => item.item_name === 'sports drink') || 0,
+                coffees: player.inventory.find(item => item.item_name === 'coffee') || 0,
+                mechanicalKeyboards: player.inventory.find(item => item.item_name === 'mechanical keyboards') || 0,
+                ssds: player.inventory.find(item => item.item_name === 'solid-state drive') || 0,
+                opticalMice: player.inventory.find(item => item.item_name === 'optical mouse') || 0,
+            })
         }
 
         function sendStats() {

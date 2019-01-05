@@ -163,6 +163,10 @@ let game = {
             if (shouldSave) {
                 game.methods.saveItem(player, player.inventory[player.inventory.length - 1])
             }
+
+            if (quantity > 1) {
+                game.methods.giveItem(player, item, quantity - 1, shouldSave)
+            }
         },
 
         //Removes a certain quantity of an item from the database

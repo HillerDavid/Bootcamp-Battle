@@ -7,18 +7,8 @@ $('#stats-tab').on('click', event => {
 
 $('#inventory-tab').on('click', event => {
     // socket for inventory tab will be here.
+    socket.emit('inventory', 'The voices where pretty gooood.')
 })
-
-
-// displayInventory = data => {
-//     console.log(data)
-//     $('#energy-drink-count').text(`data goes here`)
-//     $('#sports-drink-count').text(`data goes here`)
-//     $('#coffee-count').text(`data goes here`)
-//     $('#mechanical-keyboard-count').text(`data goes here`)
-//     $('#ssd-count').text(`data goes here`)
-//     $('#optical-mouse-count').text(`data goes here`)
-// }
 
 socket.on('stats', displayStats)
 
@@ -32,6 +22,18 @@ function displayStats(data) {
     $('#stats-attack').text('Front End(Attack): ' + data.attack)
     $('#stats-defense').text('Back End(Defense): ' + data.defense)
     $('#stats-currency').text('Nerd Cred(Currency): ' + data.currency)
+}
+
+socket.on('inventory', displayInventory)
+
+function displayInventory(data) {
+    console.log(data)
+    $('#energy-drink-count').text(data.energyDrinks.quantity || 0)
+    $('#sports-drink-count').text(data.sportsDrinks.quantity || 0)
+    $('#coffee-count').text(data.coffees.quantity || 0)
+    $('#mechanical-keyboard-count').text(data.mechanicalKeyboards.quantity || 0)
+    $('#ssd-count').text(data.ssds.quantity || 0)
+    $('#optical-mouse-count').text(data.opticalMice.quantity || 0)
 }
 
 socket.on('identify', identify)

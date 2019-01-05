@@ -91,12 +91,12 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
 
     this.buyCommand = function(modifier) {
         if (this.room !== 'vending machine') {
-            this.socket.emit('command-response', {message: 'You can only buy at the vending machine', alertType: 'danger'})
+            this.socket.emit('command-response', {message: 'You can only buy at the vending machine.', alertType: 'danger'})
             return
         }
 
         if (!modifier) {
-            this.socket.emit('command-response', {message: `The buy command takes at least one parameter e.g. 'buy energy drink' or 'buy 2 energy drink'`})
+            this.socket.emit('command-response', {message: `The buy command takes at least one parameter e.g. 'buy energy drink' or 'buy 2 energy drink.'`})
             return
         }
 
@@ -104,7 +104,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         let itemName = modifier.split(' ').slice(1).join(' ')
         if (!isNaN(quantity)) {
             if (quantity < 0) {
-                this.socket.emit('command-response', {message: 'You cannot buy an negative quantity', alertType: 'danger'})
+                this.socket.emit('command-response', {message: 'You cannot buy an negative quantity.', alertType: 'danger'})
                 return
             }
         } else {
@@ -113,19 +113,23 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         }
 
         if (!game.items[itemName]) {
-            this.socket.emit('command-response', {message: `The item ${itemName} does not exist`, alertType: 'danger'})
-            return
+            if (!game.items[itemName.slice(0, -1)]) {
+                this.socket.emit('command-response', {message: `The item ${itemName} does not exist.`, alertType: 'danger'})
+                return
+            } else {
+                itemName = itemName.slice(0, -1)
+            }
         }
         let item = game.items[itemName]
 
         if (this.currency >= quantity * item.cost) {
             this.currency -= quantity * item.cost
             game.methods.giveItem(this, item, quantity, true)
-            this.socket.emit('command-response', {message: `${this.name} bought ${quantity} ${itemName}`, alertType: 'success'})
+            this.socket.emit('command-response', {message: `${this.name} bought ${quantity} ${itemName}${quantity > 1 ? 's' : ''}.`, alertType: 'success'})
             return
         }
 
-        this.socket.emit('command-response', {message: `${this.name} does not have enough nerd cred`, alertType: 'danger'})
+        this.socket.emit('command-response', {message: `${this.name} does not have enough nerd cred.`, alertType: 'danger'})
     }
 
     //Returns if the player has the ability to attack
@@ -439,9 +443,11 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
                             this.inventory.splice(i, 1)
                         }
                         this.attacked = true
-                        this.currentEnemy.isAlive()
-                        if (this.currentEnemy && this.currentEnemy.level) {
-                            this.currentEnemy.attacked = false
+                        if (this.currentEnemy) {
+                            this.currentEnemy.isAlive()
+                            if (this.currentEnemy.level) {
+                                this.currentEnemy.attacked = false
+                            }
                         }
                         this.update()
                         return
