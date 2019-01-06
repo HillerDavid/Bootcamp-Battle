@@ -1,16 +1,19 @@
 let socket = io.connect()
-let gitBashed
+let playerNames = []
 
 $('#stats-tab').on('click', event => {
     socket.emit('stats', 'EXPLAAAIIIINNN TOOO MEEEE')
 })
-// Test function for displaying stats **START**
-// displayStats()
+
+$('#inventory-tab').on('click', event => {
+    // socket for inventory tab will be here.
+    socket.emit('inventory', 'The voices where pretty gooood.')
+})
 
 socket.on('stats', displayStats)
 
 function displayStats(data) {
-    console.log(data)
+    // console.log(data)
     $('#stats-player-name').text('Username: ' + data.player_name)
     $('#stats-level').text('Level: ' + data.level)
     $('#stats-experience').text('Exp: ' + data.exp)
@@ -20,7 +23,18 @@ function displayStats(data) {
     $('#stats-defense').text('Back End(Defense): ' + data.defense)
     $('#stats-currency').text('Nerd Cred(Currency): ' + data.currency)
 }
-// Test function for display stats **END**
+
+socket.on('inventory', displayInventory)
+
+function displayInventory(data) {
+    // console.log(data)
+    $('#energy-drink-count').text(data.energyDrinks.quantity || 0)
+    $('#sports-drink-count').text(data.sportsDrinks.quantity || 0)
+    $('#coffee-count').text(data.coffees.quantity || 0)
+    $('#mechanical-keyboard-count').text(data.mechanicalKeyboards.quantity || 0)
+    $('#ssd-count').text(data.ssds.quantity || 0)
+    $('#optical-mouse-count').text(data.opticalMice.quantity || 0)
+}
 
 socket.on('identify', identify)
 socket.on('chat', incomingChat)
@@ -66,14 +80,66 @@ function identify() {
 
 identify()
 
-$('#terminal').terminal(function (cmd) {
+let gitBashed = $('#terminal').terminal(function (cmd) {
     let userCommand = cmd
     socket.emit('command', userCommand)
-    gitBashed = this
 }, {
+    
     greetings: 'Git Bashed loaded...\r\nWelcome to Bootcamp Battle',
-    prompt: '$ '
+    prompt: '$ ',
+    tabcompletion: true,
+    doubletab: false,
+    completion: function(command, callback) {
+        let commands = ['accept', 'attack', 'buy', 'cast', 'challenge', 'clear', 'equip', 'move', 'sleep', 'unequip', 'use']
+        let items = ['energy drink', 'sports drink', 'coffee', 'console.log', 'mechanical keyboard', 'solid-state drive', 'optical mouse']
+        let spells = ['bootstrap', 'do nothing', 'for loop', 'jquery', 'mysql', 'sequelize']
+        let rooms = ['class', 'home', 'panera', 'vending machine']
+        let beginning = gitBashed.get_command()
+        let possibilities
+        if (beginning === command) {
+            possibilities = findPossibilities(commands, beginning)
+        } else {
+            beginning = beginning.toLowerCase()
+            let tempCommand = beginning.split(' ')[0]
+            let tempModifier = beginning.split(' ').slice(1).join(' ')
+            switch (tempCommand) {
+                case 'accept':
+                case 'challenge':
+                    possibilities = findPossibilities(playerNames, tempModifier)
+                    break
+                case 'buy':
+                case 'equip':
+                case 'unequip':
+                case 'use':
+                    possibilities = findPossibilities(items, tempModifier)
+                    break
+                case 'cast':
+                    possibilities = findPossibilities(spells, tempModifier)
+                    break
+                case 'move':
+                    possibilities = findPossibilities(rooms, tempModifier)
+                    break
+
+            }
+        }
+
+        if (possibilities.length < 1 || possibilities.length > 1) {
+            return
+        }
+        gitBashed.insert(possibilities[0].slice(command.length))
+    }
 })
+
+function findPossibilities(array, beginning) {
+    return array.filter(word => {
+        for(let i = 0; i < beginning.length; i++) {
+            if (word[i] !== beginning[i]) {
+                return false
+            }
+        }
+        return true
+    })
+}
 
 function incomingChat(data) {
     console.log(`User: ${data.user}`)
@@ -134,6 +200,8 @@ function scrollDown() {
 }
 
 function addPlayer(data) {
+    playerNames.push(data.toLowerCase())
+    console.log(playerNames)
     let userName = ' ' + data
     let localUsers = $('#direct-message-column')
     let activeUser = $('<li>')
@@ -150,5 +218,7 @@ function addPlayer(data) {
 }
 
 function removePlayer(data) {
+    playerNames = playerNames.filter(name => (data.toLowerCase() !== name))
+    console.log(playerNames)
     $(`#${data}`).remove()
 }
