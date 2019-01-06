@@ -1,4 +1,4 @@
-module.exports = function effect(name, attack, defense, hp, mp, turns, pulse) {
+module.exports = function Effect(name, attack, defense, hp, mp, turns, pulse) {
     this.name = name
     this.attack = attack
     this.defense = defense
@@ -21,14 +21,14 @@ module.exports = function effect(name, attack, defense, hp, mp, turns, pulse) {
     }
 
     this.checkTurns = function(target) {
-        console.log(`Turns left ${this.turns}`)
+        console.log(`${this.turns} turns left for ${this.name}`)
         if (this.turns < 1) {
             if (this.turns === 0) {
                 this.undoEffect(target)
             }
             for(let i = 0; i < target.effects.length; i++) {
                 if (target.effects[i].name === this.name) {
-                    console.log('Effect being removed')
+                    console.log(`Effect of ${this.name} being removed`)
                     target.effects.splice(i, 1)
                     return
                 }
@@ -37,13 +37,13 @@ module.exports = function effect(name, attack, defense, hp, mp, turns, pulse) {
     }
 
     this.undoEffect = function(target) {
-        console.log('Effects being undone')
+        console.log(`Effects of ${this.name} being undone`)
         target.attack -= attack
         target.defense -= defense
         target.hp -= hp
         target.mp -= mp
         if (target.level) {
-            target.socket.emit('command-response', { message: `The effect of ${this.name} has worn off.`, alertType: 'danger' })
+            target.socket.emit('command-response', { message: `The effect of ${this.name} has worn off.`, alertType: 'secondary' })
             if (target.currentEnemy && target.currentEnemy.level) {
                 target.currentEnemy.socket.emit('command-response', { message: `The effect of ${this.name} has worn off for ${target.name}.`, alertType: 'secondary' })
             }
