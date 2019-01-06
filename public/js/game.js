@@ -103,22 +103,22 @@ let gitBashed = $('#terminal').terminal(function (cmd) {
             let tempCommand = beginning.split(' ')[0]
             let tempModifier = beginning.split(' ').slice(1).join(' ')
             switch (tempCommand) {
-                case 'accept':
-                case 'challenge':
-                    possibilities = findPossibilities(playerNames, tempModifier)
-                    break
-                case 'buy':
-                case 'equip':
-                case 'unequip':
-                case 'use':
-                    possibilities = findPossibilities(items, tempModifier)
-                    break
-                case 'cast':
-                    possibilities = findPossibilities(spells, tempModifier)
-                    break
-                case 'move':
-                    possibilities = findPossibilities(rooms, tempModifier)
-                    break
+            case 'accept':
+            case 'challenge':
+                possibilities = findPossibilities(playerNames, tempModifier)
+                break
+            case 'buy':
+            case 'equip':
+            case 'unequip':
+            case 'use':
+                possibilities = findPossibilities(items, tempModifier)
+                break
+            case 'cast':
+                possibilities = findPossibilities(spells, tempModifier)
+                break
+            case 'move':
+                possibilities = findPossibilities(rooms, tempModifier)
+                break
 
             }
         }
