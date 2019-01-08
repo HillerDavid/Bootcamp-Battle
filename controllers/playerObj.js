@@ -233,9 +233,9 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
     this.endTurn = function () {
         this.update()
         if (this.isAlive()) {
-            this.attacked = true
-            this.currentEnemy.isAlive()
             if (this.currentEnemy) {
+                this.attacked = true
+                this.currentEnemy.isAlive()
                 if (this.currentEnemy.level) {
                     this.currentEnemy.attacked = false
                 }
