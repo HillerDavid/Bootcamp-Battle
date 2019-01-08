@@ -42,17 +42,17 @@ socket.on('command-response', (response) => {
     socket.emit('stats', 'EXPLAAAIIIINNN TOOO MEEEE')
     let color
     switch (response.alertType) {
-    case 'danger':
-        color = '#f00'
-        break
-    case 'secondary':
-        color = '#fff'
-        break
-    case 'success':
-        color = 'ff0'
-        break
-    default:
-        color = ''
+        case 'danger':
+            color = '#f00'
+            break
+        case 'secondary':
+            color = '#fff'
+            break
+        case 'success':
+            color = 'ff0'
+            break
+        default:
+            color = ''
     }
     gitBashed.echo(`[[;${color};]${response.message}]`)
     if (response.level) {
@@ -84,12 +84,12 @@ let gitBashed = $('#terminal').terminal(function (cmd) {
     let userCommand = cmd
     socket.emit('command', userCommand)
 }, {
-    
+
     greetings: 'Git Bashed loaded...\r\nWelcome to Bootcamp Battle',
     prompt: '$ ',
     tabcompletion: true,
     doubletab: false,
-    completion: function(command, callback) {
+    completion: function (command, callback) {
         let commands = ['accept', 'attack', 'buy', 'cast', 'challenge', 'clear', 'equip', 'move', 'sleep', 'unequip', 'use']
         let items = ['energy drink', 'sports drink', 'coffee', 'console.log', 'mechanical keyboard', 'solid-state drive', 'optical mouse']
         let spells = ['bootstrap', 'do nothing', 'for loop', 'jquery', 'mysql', 'sequelize']
@@ -103,24 +103,25 @@ let gitBashed = $('#terminal').terminal(function (cmd) {
             let tempCommand = beginning.split(' ')[0]
             let tempModifier = beginning.split(' ').slice(1).join(' ')
             switch (tempCommand) {
-            case 'accept':
-            case 'challenge':
-                possibilities = findPossibilities(playerNames, tempModifier)
-                break
-            case 'buy':
-            case 'equip':
-            case 'unequip':
-            case 'use':
-                possibilities = findPossibilities(items, tempModifier)
-                break
-            case 'cast':
-                possibilities = findPossibilities(spells, tempModifier)
-                break
-            case 'move':
-                possibilities = findPossibilities(rooms, tempModifier)
-                break
+                case 'accept':
+                case 'challenge':
+                    possibilities = findPossibilities(playerNames, tempModifier)
+                    break
+                case 'buy':
+                case 'equip':
+                case 'unequip':
+                case 'use':
+                    possibilities = findPossibilities(items, tempModifier)
+                    break
+                case 'cast':
+                    possibilities = findPossibilities(spells, tempModifier)
+                    break
+                case 'move':
+                    possibilities = findPossibilities(rooms, tempModifier)
+                    break
 
             }
+            command = beginning.split(' ').slice(1).join(' ')
         }
 
         if (possibilities.length < 1 || possibilities.length > 1) {
@@ -132,7 +133,7 @@ let gitBashed = $('#terminal').terminal(function (cmd) {
 
 function findPossibilities(array, beginning) {
     return array.filter(word => {
-        for(let i = 0; i < beginning.length; i++) {
+        for (let i = 0; i < beginning.length; i++) {
             if (word[i] !== beginning[i]) {
                 return false
             }
@@ -152,8 +153,8 @@ function incomingChat(data) {
     avatar.attr({
         'src': '/images/default-slack-2.png'
     }, {
-        'alt': 'Avatar'
-    })
+            'alt': 'Avatar'
+        })
     let playerName = $('<h6>')
     playerName.text(incomingUserName)
     let messageText = $('<p>')
@@ -177,8 +178,8 @@ $('#chat-button').on('click', function (event) {
     avatar.attr({
         'src': '/images/default-slack-1.png'
     }, {
-        'alt': 'Avatar'
-    })
+            'alt': 'Avatar'
+        })
     let messageText = $('<p>')
     messageText.text(message)
     chatDiv.append(avatar, messageText)

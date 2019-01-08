@@ -58,7 +58,7 @@ module.exports = function (io, game) {
                 }
             } else {
                 socket.emit('command-response', { message: 'Invalid command' })
-            } 
+            }
         }
 
         //When chat is recieved send out a message to everyone else, attatching the player name
@@ -89,7 +89,7 @@ module.exports = function (io, game) {
                 energyDrinks: player.inventory.find(item => item.item_name === 'energy drink') || 0,
                 sportsDrinks: player.inventory.find(item => item.item_name === 'sports drink') || 0,
                 coffees: player.inventory.find(item => item.item_name === 'coffee') || 0,
-                mechanicalKeyboards: player.inventory.find(item => item.item_name === 'mechanical keyboards') || 0,
+                mechanicalKeyboards: player.inventory.find(item => item.item_name === 'mechanical keyboard') || 0,
                 ssds: player.inventory.find(item => item.item_name === 'solid-state drive') || 0,
                 opticalMice: player.inventory.find(item => item.item_name === 'optical mouse') || 0,
             })
@@ -117,7 +117,7 @@ module.exports = function (io, game) {
             if (previousRoom === newRoom) {
                 return
             }
-            for(let key in game.players) {
+            for (let key in game.players) {
                 if (key === socket.id) {
                     continue
                 }
