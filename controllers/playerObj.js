@@ -1,4 +1,4 @@
-module.exports = function Player(player_id, player_name, attack, defense, hp, mp, currency, homework_completed, exp, level){
+module.exports = function Player(player_id, player_name, attack, defense, hp, mp, currency, homework_completed, exp, level) {
     this.player_id = player_id
     this.name = player_name
     this.attack = attack
@@ -17,8 +17,8 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
     this.challenges = []
     this.effects = []
 
-    this.acceptCommand = function(modifier) {
-        for(let i = this.challenges.length - 1; i >= 0; i--) {
+    this.acceptCommand = function (modifier) {
+        for (let i = this.challenges.length - 1; i >= 0; i--) {
             let player = game.players[this.challenges[i]]
             if (!player) {
                 this.challenges.splice(i, 1)
@@ -28,36 +28,35 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
                 continue
             }
             if (player.room !== 'panera') {
-                this.socket.emit('command-response', {message: `${player.name} is not in panera`, alertType: 'danger'})
+                this.socket.emit('command-response', { message: `${player.name} is not in panera`, alertType: 'danger' })
                 return
             }
             this.currentEnemy = player
             player.currentEnemy = this
-            this.socket.emit('command-response', {message: `You are now fighting ${player.name}.\nYou were challenged, so you go first.`, alertType:'success'})
-            player.socket.emit('command-response', {message: `You are now fighting ${this.name}.\nYou challenged them, so they go first.`, alertType: 'success'})
+            this.socket.emit('command-response', { message: `You are now fighting ${player.name}.\nYou were challenged, so you go first.`, alertType: 'success' })
+            player.socket.emit('command-response', { message: `You are now fighting ${this.name}.\nYou challenged them, so they go first.`, alertType: 'success' })
             player.attacked = true
             this.challenges = []
             player.challenges = []
             return
         }
-        this.socket.emit('command-response', {message: `There is no challenge from ${modifier}`})
+        this.socket.emit('command-response', { message: `There is no challenge from ${modifier}` })
     }
-    
+
     //This is the method where the player actually attacks the enemy they are fighting
-    this.attackCommand = function(modifier){
+    this.attackCommand = function (modifier) {
         if (modifier) {
-            this.socket.emit('command-response'), {message: 'The attack command does not take any parameters.', alertType: 'danger'}
+            this.socket.emit('command-response'), { message: 'The attack command does not take any parameters.', alertType: 'danger' }
             return
         }
         //Check if the player can attack
         if (this.canAttack()) {
-            this.update()
             if (!this.isAlive()) {
                 return
             }
-            this.socket.emit('command-response', {message: `${this.name} attacks...`, alertType: 'secondary'})
+            this.socket.emit('command-response', { message: `${this.name} attacks...`, alertType: 'secondary' })
             let equipmentModifier = 0
-            for(let i = 0; i < this.inventory.length; i++) {
+            for (let i = 0; i < this.inventory.length; i++) {
                 if (this.inventory[i].equipped) {
                     equipmentModifier += this.inventory[i].effect.attack
                 }
@@ -65,7 +64,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
             //Do damage to the enemy corresponding to the attack
             let enemyModifier = 0;
             if (this.currentEnemy.inventory) {
-                for(let i = 0; i < this.currentEnemy.inventory.length; i++) {
+                for (let i = 0; i < this.currentEnemy.inventory.length; i++) {
                     let item = this.currentEnemy.inventory[i]
                     if (item.equipped) {
                         enemyModifier += item.effect.defense
@@ -76,27 +75,25 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
             if (damage < 1) {
                 damage = 0
             }
-            this.socket.emit('command-response', {message: `${this.name} hits for ${damage}`, alertType: 'secondary'})
+            this.socket.emit('command-response', { message: `${this.name} hits for ${damage}`, alertType: 'secondary' })
             this.currentEnemy.hp += damage
-            //Store that the player has attacked already this turn
-            this.attacked = true
             if (this.currentEnemy.level) {
-                this.currentEnemy.attacked = false
-                this.currentEnemy.socket.emit('command-response', {message: `${this.name} attacks...`, alertType: 'danger'})
-                this.currentEnemy.socket.emit('command-response', {message: `${this.name} hits for ${damage}`, alertType: 'danger'})
+                this.currentEnemy.socket.emit('command-response', { message: `${this.name} attacks...`, alertType: 'danger' })
+                this.currentEnemy.socket.emit('command-response', { message: `${this.name} hits for ${damage}`, alertType: 'danger' })
             }
-            this.currentEnemy.isAlive()
+            //Store that the player has attacked already this turn
+            this.endTurn()
         }
     }
 
-    this.buyCommand = function(modifier) {
+    this.buyCommand = function (modifier) {
         if (this.room !== 'vending machine') {
-            this.socket.emit('command-response', {message: 'You can only buy at the vending machine.', alertType: 'danger'})
+            this.socket.emit('command-response', { message: 'You can only buy at the vending machine.', alertType: 'danger' })
             return
         }
 
         if (!modifier) {
-            this.socket.emit('command-response', {message: `The buy command takes at least one parameter e.g. 'buy energy drink' or 'buy 2 energy drink.'`})
+            this.socket.emit('command-response', { message: `The buy command takes at least one parameter e.g. 'buy energy drink' or 'buy 2 energy drink.'` })
             return
         }
 
@@ -104,7 +101,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         let itemName = modifier.split(' ').slice(1).join(' ')
         if (!isNaN(quantity)) {
             if (quantity < 0) {
-                this.socket.emit('command-response', {message: 'You cannot buy an negative quantity.', alertType: 'danger'})
+                this.socket.emit('command-response', { message: 'You cannot buy an negative quantity.', alertType: 'danger' })
                 return
             }
         } else {
@@ -114,7 +111,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
 
         if (!game.items[itemName]) {
             if (!game.items[itemName.slice(0, -1)]) {
-                this.socket.emit('command-response', {message: `The item ${itemName} does not exist.`, alertType: 'danger'})
+                this.socket.emit('command-response', { message: `The item ${itemName} does not exist.`, alertType: 'danger' })
                 return
             } else {
                 itemName = itemName.slice(0, -1)
@@ -125,15 +122,15 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         if (this.currency >= quantity * item.cost) {
             this.currency -= quantity * item.cost
             game.methods.giveItem(this, item, quantity, true)
-            this.socket.emit('command-response', {message: `${this.name} bought ${quantity} ${itemName}${quantity > 1 ? 's' : ''}.`, alertType: 'success'})
+            this.socket.emit('command-response', { message: `${this.name} bought ${quantity} ${itemName}${quantity > 1 ? 's' : ''}.`, alertType: 'success' })
             return
         }
 
-        this.socket.emit('command-response', {message: `${this.name} does not have enough nerd cred.`, alertType: 'danger'})
+        this.socket.emit('command-response', { message: `${this.name} does not have enough nerd cred.`, alertType: 'danger' })
     }
 
     //Returns if the player has the ability to attack
-    this.canAttack = function(fromCommand = true) {
+    this.canAttack = function (fromCommand = true) {
         //If they are in the right room, they haven't attacked yet this turn, AND are fighting an enemy they can attack
         if ((this.room === 'class' || this.room === 'panera') && !this.attacked && this.currentEnemy) {
             return true
@@ -149,9 +146,8 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         return false
     }
 
-    this.castCommand = function(modifier) {
+    this.castCommand = function (modifier) {
         if (this.canAttack()) {
-            this.update()
             if (!this.isAlive()) {
                 return
             }
@@ -167,7 +163,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
             } else if (modifier === 'bootstrap') {
                 this.currentEnemy.effects.push(new Effect('bootstrap', -1, 0, 0, 0, 5, false))
             } else if (modifier === 'do nothing') {
-                
+
             } else {
                 this.socket.emit('command-response', { message: `${modifier} is not a spell.`, alertType: 'danger' })
                 return
@@ -176,47 +172,44 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
             if (modifier === 'do nothing') {
                 this.socket.emit('command-response', { message: `Shouldn't you be coding?` })
             }
-            this.attacked = true
-            this.currentEnemy.isAlive()
-            if (this.currentEnemy) {
-                if (this.currentEnemy.level) {
-                    this.currentEnemy.attacked = false
-                    this.currentEnemy.socket.emit('command-response', {message: `${this.name} casts ${modifier}...`, alertType: 'danger'})
-                }
+            if (this.currentEnemy.level) {
+                this.currentEnemy.socket.emit('command-response', { message: `${this.name} casts ${modifier}...`, alertType: 'danger' })
             }
+            this.endTurn()
+
         }
     }
 
-    this.challengeCommand = function(modifier) {
+    this.challengeCommand = function (modifier) {
         if (this.room !== 'panera') {
-            this.socket.emit('command-response', {message: 'PvP combat must be done at Panera', alertType: 'danger'})
+            this.socket.emit('command-response', { message: 'PvP combat must be done at Panera', alertType: 'danger' })
             return
         }
-        for(let key in game.players) {
+        for (let key in game.players) {
             let player = game.players[key]
             if (player.name.toLowerCase() === modifier) {
                 if (player.room !== 'panera') {
-                    this.socket.emit('command-response', {message: `${modifier} is not at Panera`, alertType: 'danger'})
+                    this.socket.emit('command-response', { message: `${modifier} is not at Panera`, alertType: 'danger' })
                     return
                 }
                 if (player.challenges.includes(this.socket.id)) {
-                    this.socket.emit('command-response', {message: `${this.name} has already challenged ${modifier}`, alertType: 'danger'})
+                    this.socket.emit('command-response', { message: `${this.name} has already challenged ${modifier}`, alertType: 'danger' })
                     return
                 }
                 if (player.hiddenNumber === this.hiddenNumber) {
-                    this.socket.emit('command-response', {message: 'You cannot challenge yourself', alertType: 'danger'})
+                    this.socket.emit('command-response', { message: 'You cannot challenge yourself', alertType: 'danger' })
                     return
                 }
-                player.socket.emit('command-response', {message: `${this.name} challenged you`, alertType: 'success'})
+                player.socket.emit('command-response', { message: `${this.name} challenged you`, alertType: 'success' })
                 player.challenges.push(this.socket.id)
                 return
             }
         }
-        this.socket.emit('command-response', {message: `There is no player with the name ${modifier}`, alertType: 'danger'})
+        this.socket.emit('command-response', { message: `There is no player with the name ${modifier}`, alertType: 'danger' })
     }
 
     //Allows the player to type in console.log and see information about their character
-    this['console.logCommand'] = function() {
+    this['console.logCommand'] = function () {
         let message = ''
         message += `Stress(HP): ${this.hp}/${this.level * 10} (Stress Limit)\n`
         message += `Endurance(MP): ${this.mp}\n`
@@ -226,7 +219,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         message += `Exp: ${this.exp}\n`
         message += `Level: ${this.level}\n`
         message += 'Backpack: ['
-        for(let i = 0; i < this.inventory.length; i++) {
+        for (let i = 0; i < this.inventory.length; i++) {
             if (i === 0) {
                 message += '\n'
             }
@@ -234,65 +227,79 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         }
         message += ']'
         message = message.trim()
-        this.socket.emit('command-response', {message})
+        this.socket.emit('command-response', { message })
     }
 
-    this.equipCommand = function(modifier) {
+    this.endTurn = function () {
+        this.update()
+        if (this.isAlive()) {
+            this.attacked = true
+            this.currentEnemy.isAlive()
+            if (this.currentEnemy) {
+                if (this.currentEnemy.level) {
+                    this.currentEnemy.attacked = false
+                }
+            }
+        }
+    }
+
+    this.endFight = function (shouldHeal) {
+        if (shouldHeal) {
+            this.hp = 0
+        }
+        this.attacked = false
+        this.removeEffects()
+        this.currentEnemy = undefined
+    }
+
+    this.equipCommand = function (modifier) {
         for (let i = 0; i < this.inventory.length; i++) {
             let item = this.inventory[i]
             if (item.item_name === modifier) {
                 let equipResponse = item.equip()
                 if (!equipResponse) {
                     game.methods.updateItem(this, item)
-                    this.socket.emit('command-response', {message: `${this.name} equipped ${item.item_name}`})
+                    this.socket.emit('command-response', { message: `${this.name} equipped ${item.item_name}` })
                 } else {
-                    this.socket.emit('command-response', {message: equipResponse, alertType: 'danger'})
+                    this.socket.emit('command-response', { message: equipResponse, alertType: 'danger' })
                 }
                 return
             }
         }
-        this.socket.emit('command-response', {message: `${this.name} does not have an item called ${modifier}`, alertType: 'danger'})
+        this.socket.emit('command-response', { message: `${this.name} does not have an item called ${modifier}`, alertType: 'danger' })
     }
 
-    this.faint = function() {
-        this.currentEnemy = undefined
+    this.faint = function () {
         this.room = 'home'
-        this.hp = 0
-        this.removeEffects()
+        this.endFight(true)
         if (this.currency > this.level * 20) {
             this.currency -= this.level * 20
         } else {
             this.currency = 0
         }
-        this.socket.emit('command-response', {message:  `The stress is too much! ${this.name} fainted.`})
-        this.socket.emit('command-response', {message:  `${this.name} wakes up energized and ready to try again!`, level: this.room})
+        this.socket.emit('command-response', { message: `The stress is too much! ${this.name} fainted.` })
+        this.socket.emit('command-response', { message: `${this.name} wakes up energized and ready to try again!`, level: this.room })
     }
 
     //Returns if the player is still alive
-    this.isAlive = function(justCheck = false){
+    this.isAlive = function (justCheck = false) {
         let alive = (this.hp < this.level * 10)
         if (!justCheck) {
             if (!alive) {
                 if (this.room === 'class') {
                     this.faint()
                 } else {
-                    this.currentEnemy.socket.emit('command-response', {message: 'You won!', alertType: 'success'})
-                    this.currentEnemy.hp = 0
-                    this.currentEnemy.attacked = false
-                    this.currentEnemy.removeEffects()
-                    this.currentEnemy.currentEnemy = undefined
-                    this.socket.emit('command-response', {message: 'You lost.', alertType: 'danger'})
-                    this.hp = 0
-                    this.attacked = false
-                    this.removeEffects()
-                    this.currentEnemy = undefined
+                    this.currentEnemy.socket.emit('command-response', { message: 'You won!', alertType: 'success' })
+                    this.currentEnemy.endFight(true)
+                    this.socket.emit('command-response', { message: 'You lost.', alertType: 'danger' })
+                    this.endFight(true)
                 }
             }
         }
         return alive
     }
 
-    this.levelUp = function() {
+    this.levelUp = function () {
         if (this.exp >= this.level * 200) {
             this.exp -= this.level * 200
             this.level++
@@ -302,58 +309,58 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         }
     }
 
-    this.moneyCommand = function() {
+    this.moneyCommand = function () {
         this.currency += 100
     }
 
     //Move the player around the world
-    this.moveCommand = function(room) {
+    this.moveCommand = function (room) {
         //Define the available areas
         let rooms = ['home', 'panera', 'class', 'vending machine']
         if (this.currentEnemy) {
-            this.socket.emit('command-response', {message: `${this.name} cannot move to a different area during a fight`, alertType: 'danger'})
+            this.socket.emit('command-response', { message: `${this.name} cannot move to a different area during a fight`, alertType: 'danger' })
             return
         }
         if (!rooms.includes(room)) {
-            this.socket.emit('command-response', {message: `${room} is not a valid location `, alertType: 'danger'})
+            this.socket.emit('command-response', { message: `${room} is not a valid location `, alertType: 'danger' })
             return
         }
         if (this.room === room) {
-            this.socket.emit('command-response', {message: `${this.name} is already in ${room}`, alertType: 'danger'})
+            this.socket.emit('command-response', { message: `${this.name} is already in ${room}`, alertType: 'danger' })
             return
         }
         //Move them to the room they are trying to access
         this.room = room
-        this.socket.emit('command-response', {message: `${this.name} moved to ${this.room}`, level: this.room})
+        this.socket.emit('command-response', { message: `${this.name} moved to ${this.room}`, level: this.room })
         if (this.room === 'class') {
             if (this.homework_completed < 1) {
                 game.methods.createEnemy([this])
-                this.socket.emit('command-response', {message: `${this.name} has been given a(n) ${this.currentEnemy.name}`, alertType: 'danger'})
+                this.socket.emit('command-response', { message: `${this.name} has been given a(n) ${this.currentEnemy.name}`, alertType: 'danger' })
             }
         }
-        
+
     }
 
     //Return a string of all of the properties and their values
-    this.print = function() {
+    this.print = function () {
         let string = ''
-        for(let key in this) {
-            if (typeof this[key] !== 'function'){
+        for (let key in this) {
+            if (typeof this[key] !== 'function') {
                 string += `${key}: ${this[key]}\n`
             }
         }
         return string
     }
 
-    this.relayEffect = function(descriptor, value, effectName, isGood) {
+    this.relayEffect = function (descriptor, value, effectName, isGood) {
         let message = `${this.name} is ${descriptor} ${value} by ${effectName}`
-        this.socket.emit('command-response', {message, alertType: isGood ? 'secondary' : 'danger'})
+        this.socket.emit('command-response', { message, alertType: isGood ? 'secondary' : 'danger' })
         if (this.currentEnemy && this.currentEnemy.level) {
-            this.currentEnemy.socket.emit('command-response', { message, alertType: isGood ? 'danger' : 'secondary'})
-        } 
+            this.currentEnemy.socket.emit('command-response', { message, alertType: isGood ? 'danger' : 'secondary' })
+        }
     }
 
-    this.removeEffects = function() {
+    this.removeEffects = function () {
         for (let i = 0; i < this.effects.length; i++) {
             this.effects[i].undoEffect(this)
         }
@@ -361,13 +368,13 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
     }
 
     //Heal the user if they are able to sleep
-    this.sleepCommand = function() {
+    this.sleepCommand = function () {
         if (this.room === 'home') {
             this.hp = 0
             if (this.mp === 0) {
                 this.mp = 10
             }
-            this.socket.emit('command-response', { message:  `${this.name} wakes up energized and ready!` })
+            this.socket.emit('command-response', { message: `${this.name} wakes up energized and ready!` })
             return true
         } else {
             if (this.room === 'class') {
@@ -381,25 +388,25 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         return false
     }
 
-    this.unequipCommand = function(modifier) {
+    this.unequipCommand = function (modifier) {
         for (let i = 0; i < this.inventory.length; i++) {
             let item = this.inventory[i]
             if (item.item_name === modifier) {
                 let equipResponse = item.unequip()
                 if (!equipResponse) {
                     game.methods.updateItem(this, item)
-                    this.socket.emit('command-response', {message: `${this.name} unequipped ${item.item_name}`})
+                    this.socket.emit('command-response', { message: `${this.name} unequipped ${item.item_name}` })
                 } else {
-                    this.socket.emit('command-response', {message: equipResponse, alertType: 'danger'})
+                    this.socket.emit('command-response', { message: equipResponse, alertType: 'danger' })
                 }
                 return
             }
         }
-        this.socket.emit('command-response', {message: `${this.name} does not have an item called ${modifier}`, alertType: 'danger'})
+        this.socket.emit('command-response', { message: `${this.name} does not have an item called ${modifier}`, alertType: 'danger' })
     }
 
-    this.update = function() {
-        for(let i = 0; i < this.effects.length; i++) {
+    this.update = function () {
+        for (let i = 0; i < this.effects.length; i++) {
             let effect = this.effects[i]
             if (effect.pulse || effect.first) {
                 if (effect.attack > 0) {
@@ -430,7 +437,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         }
     }
 
-    this.useCommand = function(modifier) {
+    this.useCommand = function (modifier) {
         if (!this.currentEnemy || this.canAttack(false)) {
             for (let i = 0; i < this.inventory.length; i++) {
                 let item = this.inventory[i]
@@ -442,23 +449,19 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
                             game.methods.removeItem(this, item, 99)
                             this.inventory.splice(i, 1)
                         }
-                        this.attacked = true
-                        if (this.currentEnemy) {
-                            this.currentEnemy.isAlive()
-                            if (this.currentEnemy.level) {
-                                this.currentEnemy.attacked = false
-                            }
+                        if (this.currentEnemy && this.currentEnemy.level) {
+                            this.currentEnemy.socket.emit('command-response', { message: `${this.name} used the item ${item.item_name}.`, alertType: 'danger' })
                         }
-                        this.update()
+                        this.endTurn()
                         return
                     }
-                    this.socket.emit('command-response', {message: `${item.item_name} is not a usable item`, alertType: 'danger'})
+                    this.socket.emit('command-response', { message: `${item.item_name} is not a usable item`, alertType: 'danger' })
                     return
                 }
             }
-            this.socket.emit('command-response', {message: `${this.name} does not have an item called ${modifier}`, alertType: 'danger'})
+            this.socket.emit('command-response', { message: `${this.name} does not have an item called ${modifier}`, alertType: 'danger' })
         } else {
-            this.socket.emit('command-response', {message: `${this.name} cannot use an item right now`, alertType: 'danger'})
+            this.socket.emit('command-response', { message: `${this.name} cannot use an item right now`, alertType: 'danger' })
             return
         }
     }
