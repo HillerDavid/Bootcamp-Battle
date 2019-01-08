@@ -235,10 +235,10 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
         if (this.isAlive()) {
             if (this.currentEnemy) {
                 this.attacked = true
-                this.currentEnemy.isAlive()
                 if (this.currentEnemy.level) {
                     this.currentEnemy.attacked = false
                 }
+                this.currentEnemy.isAlive()
             }
         }
     }
