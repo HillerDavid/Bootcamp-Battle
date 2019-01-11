@@ -37,6 +37,9 @@ module.exports = function Effect(name, attack, defense, hp, mp, turns, pulse) {
     }
 
     this.undoEffect = function(target) {
+        if (this.pulse) {
+            return
+        }
         console.log(`Effects of ${this.name} being undone`)
         target.attack -= attack
         target.defense -= defense
