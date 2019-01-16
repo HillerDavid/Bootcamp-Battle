@@ -100,6 +100,14 @@ module.exports = function (io, game) {
                 return
             }
             let player = game.players[socket.id]
+            let attackMod = 0
+            let defenseMod = 0
+            player.inventory.forEach(item => {
+                if (item.equipped) {
+                    attackMod += item.effect.attack
+                    defenseMod += item.effect.defense
+                }
+            })
             socket.emit('stats', {
                 player_name: player.name,
                 level: player.level,
@@ -107,8 +115,8 @@ module.exports = function (io, game) {
                 hp: player.hp,
                 stressLimit: player.level * 10,
                 mp: player.mp,
-                attack: player.attack,
-                defense: player.defense,
+                attack: `${player.attack} (${attackMod > 0 ? `+${attackMod}`: attackMod})`,
+                defense: `${player.defense} (${defenseMod > 0 ? `+${defenseMod}`: defenseMod})`,
                 currency: player.currency
             })
         }

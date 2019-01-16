@@ -11,7 +11,7 @@ Click the **Register** button.
 
 ## Logging in to Your Account
 
-Enter your accounts **username, email, and password** into the form on the home page.
+Enter your accounts **email and password** into the form on the home page.
 Click the **Login** button.
 
 # Commands

@@ -17,7 +17,7 @@ function displayStats(data) {
     $('#stats-player-name').text('Username: ' + data.player_name)
     $('#stats-level').text('Level: ' + data.level)
     $('#stats-experience').text('Exp: ' + data.exp)
-    $('#stats-stress').text('Stress(HP) ' + data.hp + '/' + data.stressLimit + ' (Stress Limit)')
+    $('#stats-stress').text('Stress(HP): ' + data.hp + '/' + data.stressLimit + ' (Stress Limit)')
     $('#stats-mp').text('Endurance(MP): ' + data.mp)
     $('#stats-attack').text('Front End(Attack): ' + data.attack)
     $('#stats-defense').text('Back End(Defense): ' + data.defense)
