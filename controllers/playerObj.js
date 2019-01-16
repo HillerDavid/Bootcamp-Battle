@@ -62,7 +62,7 @@ module.exports = function Player(player_id, player_name, attack, defense, hp, mp
                 }
             }
             //Do damage to the enemy corresponding to the attack
-            let enemyModifier = 0;
+            let enemyModifier = 0
             if (this.currentEnemy.inventory) {
                 for (let i = 0; i < this.currentEnemy.inventory.length; i++) {
                     let item = this.currentEnemy.inventory[i]
