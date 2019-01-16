@@ -5,13 +5,12 @@ Bootcamp Battle is a simple RPG game developed by Team Fantastic ForEach. Users 
 # Getting Started
 
 ## Creating an Account
-![Create-Account](Screenshots/start.png)
+
 Enter a new **username, email, and password** into the form on the home page.
 Click the **Register** button.
 
 ## Logging in to Your Account
 
-![Login-Account](Screenshots/login-account.gif)
 Enter your accounts **username, email, and password** into the form on the home page.
 Click the **Login** button.
 
